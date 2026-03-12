@@ -11,6 +11,8 @@
 // -----------------------
 // Update information here
 // -----------------------
+const ASMS_VERSION = "1.0.0";
+
 const CONFIG = {
   SPREADSHEET_ID: "1jnctNn12vFfgRjlpRe-r0xh_CbzW33s4TJgIibBMuso",
 
