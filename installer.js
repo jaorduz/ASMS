@@ -23,15 +23,52 @@ function installASMS(){
 
 try{
 
-const eventName = promptValue_("ASMS Installer","Enter the event name:");
-const language = promptValue_("Language","Type EN or ES:");
-const letterTemplateURL = promptValue_("Letter Template","Paste Google Doc template URL:");
+/* ---------------------------------
+ASK BASIC EVENT INFORMATION
+--------------------------------- */
 
-/* CREATE SPREADSHEET */
+const eventName = promptValue_("ASMS Installer","Enter the event name:");
+
+const language = promptValue_("Language","Type EN or ES:");
+
+const folderURL = promptValue_(
+"Event Folder",
+"Paste the Google Drive folder URL where event files should be created:"
+);
+
+const letterTemplateURL = promptValue_(
+"Letter Template",
+"Paste Google Doc template URL:"
+);
+
+
+/* ---------------------------------
+GET TARGET FOLDER
+--------------------------------- */
+
+const folderId = extractGoogleId_(folderURL);
+
+const folder = DriveApp.getFolderById(folderId);
+
+
+/* ---------------------------------
+CREATE SPREADSHEET
+--------------------------------- */
 
 const spreadsheet = createASMSSpreadsheet_(eventName);
 
-/* CREATE FORM */
+/* Move spreadsheet into event folder */
+
+const spreadsheetFile = DriveApp.getFileById(spreadsheet.getId());
+
+folder.addFile(spreadsheetFile);
+
+DriveApp.getRootFolder().removeFile(spreadsheetFile);
+
+
+/* ---------------------------------
+CREATE CONFIRMATION FORM
+--------------------------------- */
 
 const form = createConfirmationForm_(eventName, language);
 
@@ -42,11 +79,17 @@ FormApp.DestinationType.SPREADSHEET,
 spreadsheet.getId()
 );
 
-/* GET FORM URL */
+
+/* ---------------------------------
+GET FORM URL
+--------------------------------- */
 
 const formURL = form.getPublishedUrl();
 
-/* SAVE CONFIGURATION */
+
+/* ---------------------------------
+SAVE CONFIGURATION
+--------------------------------- */
 
 saveASMSProperties_({
 eventName,
@@ -57,12 +100,20 @@ spreadsheetId: spreadsheet.getId(),
 formId: form.getId()
 });
 
-/* INSTALL TRIGGERS */
+
+/* ---------------------------------
+INSTALL TRIGGERS
+--------------------------------- */
 
 installASMSTriggers_(spreadsheet.getId());
 
+
+/* ---------------------------------
+SUCCESS MESSAGE
+--------------------------------- */
+
 SpreadsheetApp.getUi().alert(
-"ASMS installed successfully."
+"ASMS installed successfully.\n\nSpreadsheet created in selected folder."
 );
 
 }
