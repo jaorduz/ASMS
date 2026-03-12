@@ -23,45 +23,46 @@ function installASMS(){
 
 try{
 
-const eventName = promptValue_(
-"ASMS Installer",
-"Enter the event name:"
-);
+const eventName = promptValue_("ASMS Installer","Enter the event name:");
+const language = promptValue_("Language","Type EN or ES:");
+const letterTemplateURL = promptValue_("Letter Template","Paste Google Doc template URL:");
 
-const language = promptValue_(
-"Language",
-"Type EN or ES:"
-);
+/* CREATE SPREADSHEET */
+
+const spreadsheet = createASMSSpreadsheet_(eventName);
+
+/* CREATE FORM */
 
 const form = createConfirmationForm_(eventName, language);
 
-const formURL = form.getPublishedUrl();
+/* LINK FORM TO SPREADSHEET */
 
-const letterTemplateURL = promptValue_(
-"Letter Template",
-"Paste Google Doc template URL:"
+form.setDestination(
+FormApp.DestinationType.SPREADSHEET,
+spreadsheet.getId()
 );
 
-const spreadsheet = createASMSSpreadsheet_(eventName);
+/* GET FORM URL */
+
+const formURL = form.getPublishedUrl();
+
+/* SAVE CONFIGURATION */
 
 saveASMSProperties_({
 eventName,
 language,
 formURL,
 letterTemplateURL,
-spreadsheetId: spreadsheet.getId()
+spreadsheetId: spreadsheet.getId(),
+formId: form.getId()
 });
 
-installASMSTriggers_();
+/* INSTALL TRIGGERS */
+
+installASMSTriggers_(spreadsheet.getId());
 
 SpreadsheetApp.getUi().alert(
 "ASMS installed successfully."
-);
-
-// JO
-form.setDestination(
-FormApp.DestinationType.SPREADSHEET,
-spreadsheet.getId()
 );
 
 }
@@ -189,6 +190,14 @@ function installASMSTriggers_(){
 
 const triggers = ScriptApp.getProjectTriggers();
 
+
+/*========================= */
+ScriptApp.newTrigger("processConfirmation")
+.forSpreadsheet(spreadsheet.getId())
+.onFormSubmit()
+.create();
+/*========================= */
+
 triggers.forEach(t=>ScriptApp.deleteTrigger(t));
 
 ScriptApp.newTrigger("sendReminders")
@@ -202,14 +211,6 @@ ScriptApp.newTrigger("sendTalkReminders7Days")
 .everyDays(1)
 .atHour(10)
 .create();
-
-
-/*========================= */
-ScriptApp.newTrigger("processConfirmation")
-.forSpreadsheet(spreadsheet.getId())
-.onFormSubmit()
-.create();
-
 
 
 }
