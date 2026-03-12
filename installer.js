@@ -72,13 +72,22 @@ CREATE CONFIRMATION FORM
 
 const form = createConfirmationForm_(eventName, language);
 
+
+/* MOVE FORM TO EVENT FOLDER */
+
+const formFile = DriveApp.getFileById(form.getId()).setName(eventName + " — Speaker Confirmation Form");
+
+folder.addFile(formFile);
+
+DriveApp.getRootFolder().removeFile(formFile);
+
+
 /* LINK FORM TO SPREADSHEET */
 
 form.setDestination(
 FormApp.DestinationType.SPREADSHEET,
 spreadsheet.getId()
 );
-
 
 /* ---------------------------------
 GET FORM URL
