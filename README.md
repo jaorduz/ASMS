@@ -25,7 +25,7 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-stable-success)
 
-[![DOI](https://zenodo.org/badge/1170277309.svg)](https://doi.org/10.5281/zenodo.18838613)
+<!-- [![DOI](https://zenodo.org/badge/1170277309.svg)](https://doi.org/10.5281/zenodo.18838613) -->
 
 
 
