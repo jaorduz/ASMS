@@ -19,47 +19,31 @@
 // -----------------------------------------------------
 
 
-function installASMS() {
+function installASMS(){
 
-const ui = SpreadsheetApp.getUi();
+try{
 
-/* EVENT NAME */
-
-const eventName = ui.prompt(
+const eventName = promptValue_(
 "ASMS Installer",
-"Enter the event name:",
-ui.ButtonSet.OK_CANCEL
-).getResponseText();
+"Enter the event name:"
+);
 
-/* LANGUAGE */
-
-const language = ui.prompt(
+const language = promptValue_(
 "Language",
-"Type EN or ES",
-ui.ButtonSet.OK_CANCEL
-).getResponseText();
+"Type EN or ES:"
+);
 
-/* CONFIRMATION FORM */
-
-const formURL = ui.prompt(
+const formURL = promptValue_(
 "Confirmation Form",
-"Paste the confirmation form URL:",
-ui.ButtonSet.OK_CANCEL
-).getResponseText();
+"Paste the confirmation form URL:"
+);
 
-/* LETTER TEMPLATE */
-
-const letterTemplateURL = ui.prompt(
+const letterTemplateURL = promptValue_(
 "Letter Template",
-"Paste Google Doc template URL:",
-ui.ButtonSet.OK_CANCEL
-).getResponseText();
-
-/* CREATE SPREADSHEET */
+"Paste Google Doc template URL:"
+);
 
 const spreadsheet = createASMSSpreadsheet_(eventName);
-
-/* SAVE CONFIGURATION */
 
 saveASMSProperties_({
 eventName,
@@ -69,17 +53,20 @@ letterTemplateURL,
 spreadsheetId: spreadsheet.getId()
 });
 
-/* INSTALL TRIGGERS */
-
 installASMSTriggers_();
 
-/* SUCCESS MESSAGE */
-
-ui.alert(
-"ASMS Installed Successfully",
-"Spreadsheet created:\n\n" + spreadsheet.getUrl(),
-ui.ButtonSet.OK
+SpreadsheetApp.getUi().alert(
+"ASMS installed successfully."
 );
+
+}
+catch(err){
+
+SpreadsheetApp.getUi().alert(
+"ASMS Installer cancelled.\n\n" + err.message
+);
+
+}
 
 }
 
@@ -198,3 +185,17 @@ ScriptApp.newTrigger("sendTalkReminders7Days")
 
 }
 /*================= */
+
+function promptValue_(title, message){
+
+const ui = SpreadsheetApp.getUi();
+
+const response = ui.prompt(title, message, ui.ButtonSet.OK_CANCEL);
+
+if(response.getSelectedButton() !== ui.Button.OK){
+throw new Error("ASMS installation cancelled by user.");
+}
+
+return response.getResponseText().trim();
+
+}
