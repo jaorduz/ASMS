@@ -33,10 +33,9 @@ const language = promptValue_(
 "Type EN or ES:"
 );
 
-const formURL = promptValue_(
-"Confirmation Form",
-"Paste the confirmation form URL:"
-);
+const form = createConfirmationForm_(eventName, language);
+
+const formURL = form.getPublishedUrl();
 
 const letterTemplateURL = promptValue_(
 "Letter Template",
@@ -59,6 +58,12 @@ SpreadsheetApp.getUi().alert(
 "ASMS installed successfully."
 );
 
+// JO
+form.setDestination(
+FormApp.DestinationType.SPREADSHEET,
+spreadsheet.getId()
+);
+
 }
 catch(err){
 
@@ -69,6 +74,7 @@ SpreadsheetApp.getUi().alert(
 }
 
 }
+
 
 /* ======================== */
 
@@ -124,6 +130,9 @@ sheet.getRange(1,1,1,columns.length).setValues([columns]);
 
 sheet.setFrozenRows(1);
 
+sheet.getRange("A2")
+.setValue("ASMS system installed.");
+
 return spreadsheet;
 
 }
@@ -150,6 +159,17 @@ props.setProperty(
 "ASMS_SPREADSHEET_ID",
 config.spreadsheetId
 );
+
+props.setProperty(
+"ASMS_FORM_ID",
+form.getId()
+);
+
+props.setProperty(
+"ASMS_FORM_URL",
+formURL
+);
+
 
 }
 
@@ -182,6 +202,15 @@ ScriptApp.newTrigger("sendTalkReminders7Days")
 .everyDays(1)
 .atHour(10)
 .create();
+
+
+/*========================= */
+ScriptApp.newTrigger("processConfirmation")
+.forSpreadsheet(spreadsheet.getId())
+.onFormSubmit()
+.create();
+
+
 
 }
 /*================= */
