@@ -12,7 +12,10 @@ function onOpen(){
 
 SpreadsheetApp.getUi()
 
-.createMenu("Bootcamp Control Panel")
+.createMenu("ASMS Control Panel")
+
+.addItem("Install ASMS Event","installASMS")
+.addSeparator()
 
 .addItem("System Diagnostics","runSystemDiagnostics")
 .addItem("System Summary","showSystemSummary")
