@@ -145,11 +145,11 @@ function saveASMSProperties_(config){
 
 const props = PropertiesService.getScriptProperties();
 
-props.setProperty("ASMS_EVENT_NAME",config.eventName);
+props.setProperty("ASMS_EVENT_NAME", config.eventName);
 
-props.setProperty("ASMS_LANGUAGE",config.language);
+props.setProperty("ASMS_LANGUAGE", config.language);
 
-props.setProperty("ASMS_FORM_URL",config.formURL);
+props.setProperty("ASMS_FORM_URL", config.formURL);
 
 props.setProperty(
 "ASMS_LETTER_TEMPLATE_ID",
@@ -163,17 +163,10 @@ config.spreadsheetId
 
 props.setProperty(
 "ASMS_FORM_ID",
-form.getId()
+config.formId
 );
-
-props.setProperty(
-"ASMS_FORM_URL",
-formURL
-);
-
 
 }
-
 
 /*================== */
 
@@ -186,19 +179,22 @@ return match ? match[0] : null;
 }
 
 /*================= */
-function installASMSTriggers_(){
+function installASMSTriggers_(spreadsheetId){
 
 const triggers = ScriptApp.getProjectTriggers();
 
+/* remove existing triggers */
 
-/*========================= */
+triggers.forEach(t => ScriptApp.deleteTrigger(t));
+
+/* form confirmation trigger */
+
 ScriptApp.newTrigger("processConfirmation")
-.forSpreadsheet(spreadsheet.getId())
+.forSpreadsheet(spreadsheetId)
 .onFormSubmit()
 .create();
-/*========================= */
 
-triggers.forEach(t=>ScriptApp.deleteTrigger(t));
+/* reminder triggers */
 
 ScriptApp.newTrigger("sendReminders")
 .timeBased()
@@ -211,7 +207,6 @@ ScriptApp.newTrigger("sendTalkReminders7Days")
 .everyDays(1)
 .atHour(10)
 .create();
-
 
 }
 /*================= */
