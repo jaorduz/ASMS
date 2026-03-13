@@ -14,22 +14,39 @@
 // -----------------------------------------------------
 
 
+function getActiveSpreadsheetId_(){
+
+const id = PropertiesService
+.getScriptProperties()
+.getProperty("ASMS_ACTIVE_EVENT_ID");
+
+if(!id){
+
+throw new Error(
+"No active ASMS event selected.\n\nUse ASMS → Select Event."
+);
+
+}
+
+return id;
+
+}
+
 /**
  * Returns the active sheet defined in CONFIG
  * This is the main sheet used by the system (test or production).
  */
 function getSheet_(){
 
-  // Open spreadsheet using ID defined in config.gs
-  const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+const spreadsheetId = getActiveSpreadsheetId_();
 
-  // Select the sheet name defined in config.gs
-  const sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
+const ss = SpreadsheetApp.openById(spreadsheetId);
 
-  // Safety check in case the sheet name is wrong
-  if(!sheet) throw new Error("Sheet not found");
+const sheet = ss.getSheetByName("production");
 
-  return sheet;
+if(!sheet) throw new Error("Sheet not found");
+
+return sheet;
 
 }
 

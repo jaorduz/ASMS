@@ -14,6 +14,10 @@ SpreadsheetApp.getUi()
 
 .createMenu("ASMS")
 
+.addItem("Select Event","selectASMSEvent")
+
+.addSeparator()
+
 .addItem("Install ASMS Event","installASMS")
 .addItem("Clone Event","cloneASMSEvent")
 

@@ -1,5 +1,5 @@
 git add .
-git commit -m "ASMS update. installer fix"
+git commit -m "Add active event selector"
 git push
 
 clasp push
