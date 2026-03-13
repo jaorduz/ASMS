@@ -243,3 +243,36 @@ return HtmlService
 
 }
 
+/*======== */
+
+function getEventFolder_(){
+
+const registryId = PropertiesService
+.getScriptProperties()
+.getProperty("ASMS_REGISTRY_ID");
+
+const activeEventId = PropertiesService
+.getScriptProperties()
+.getProperty("ASMS_ACTIVE_EVENT_ID");
+
+if(!registryId || !activeEventId){
+throw new Error("No active ASMS event selected.");
+}
+
+const registry = SpreadsheetApp.openById(registryId);
+const sheet = registry.getSheets()[0];
+
+const rows = sheet.getDataRange().getValues();
+rows.shift();
+
+const row = rows.find(r => r[1] === activeEventId);
+
+if(!row){
+throw new Error("Active event not found in registry.");
+}
+
+const folderId = row[3];
+
+return DriveApp.getFolderById(folderId);
+
+}
