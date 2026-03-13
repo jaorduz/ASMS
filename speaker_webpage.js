@@ -40,11 +40,7 @@ const cards = speakers.map(r=>{
 
 const name = escapeHtml_(`${r.speakerName} ${r.speakerLastName}`);
 
-let photo = r.speakerPhoto || "https://via.placeholder.com/300";
-
-if(photo.toLowerCase().endsWith(".heic")){
-photo = photo.replace(".heic",".jpg");
-}
+const photo = r.speakerPhoto || "https://via.placeholder.com/300";
 
 const bio = escapeHtml_(r.speakerBio || "");
 
