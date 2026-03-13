@@ -57,7 +57,7 @@ return `
 
 <div class="speaker-card">
 
-<img src="${photo}" class="speaker-photo">
+<img src="${photo}" class="speaker-photo" referrerpolicy="no-referrer">
 
 <h3>${name}</h3>
 
