@@ -311,3 +311,19 @@ generateBadge(record);
 
 }
 
+
+/*=========== */
+
+function getEventFolder_(){
+
+const folderId = PropertiesService
+.getScriptProperties()
+.getProperty("ASMS_EVENT_FOLDER_ID");
+
+if(!folderId){
+throw new Error("Event folder not configured.");
+}
+
+return DriveApp.getFolderById(folderId);
+
+}

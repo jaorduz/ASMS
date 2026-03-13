@@ -221,25 +221,23 @@ props.setProperty("ASMS_LANGUAGE", config.language);
 props.setProperty("ASMS_FORM_URL", config.formURL);
 
 props.setProperty(
-"ASMS_LETTER_TEMPLATE_ID",
-extractGoogleId_(config.letterTemplateURL)
-);
-
-
-props.setProperty(
-"ASMS_SPREADSHEET_ID",
+"ASMS_EVENT_SPREADSHEET_ID",
 config.spreadsheetId
 );
 
 props.setProperty(
-"ASMS_FORM_ID",
+"ASMS_EVENT_FORM_ID",
 config.formId
 );
 
+props.setProperty(
+"ASMS_EVENT_FOLDER_ID",
+config.folderId
+);
 
 props.setProperty(
-"ASMS_FOLDER_ID",
-config.folderId
+"ASMS_EVENT_LETTER_TEMPLATE_ID",
+extractGoogleId_(config.letterTemplateURL)
 );
 
 }

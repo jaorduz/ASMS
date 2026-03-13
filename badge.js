@@ -8,23 +8,11 @@
 // Institution: UNAM – FES Acatlán
 // -----------------------------------------------------
 
-
 // -----------------------------------------------------
 // BADGE GENERATOR
 // Creates speaker badges with QR codes
 // -----------------------------------------------------
 
-
-
-/**
- * Generates a badge for a single speaker.
- *
- * Badge includes:
- * - Event title
- * - QR code (LinkedIn / website)
- * - Speaker name
- * - Institution
- */
 function generateBadge(record){
 
 const name =
@@ -53,13 +41,11 @@ const qr =
 encodeURIComponent(social);
 
 
-
 // ---------------------------------------------
 // Badge HTML layout
 // ---------------------------------------------
 const html = `
 <!DOCTYPE html>
-
 <html>
 
 <body style="
@@ -97,21 +83,30 @@ Speaker
 </div>
 
 </body>
-
 </html>
 `;
 
 
+// ---------------------------------------------
+// Save badge inside event folder
+// ---------------------------------------------
+const eventFolder = getEventFolder_();
 
-// ---------------------------------------------
-// Save badge as HTML file
-// (can easily be printed or converted to PDF)
-// ---------------------------------------------
+let badgesFolder;
+
+const folders = eventFolder.getFoldersByName("badges");
+
+if(folders.hasNext()){
+badgesFolder = folders.next();
+}else{
+badgesFolder = eventFolder.createFolder("badges");
+}
+
 const filename =
 "badge_" + sanitizeFilename_(name) + ".html";
 
 const file =
-DriveApp.createFile(
+badgesFolder.createFile(
 Utilities.newBlob(html,"text/html",filename)
 );
 
