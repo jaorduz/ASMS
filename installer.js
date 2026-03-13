@@ -96,18 +96,24 @@ GET FORM URL
 const formURL = form.getPublishedUrl();
 
 
-/* ---------------------------------
-SAVE CONFIGURATION
---------------------------------- */
+/* SAVE CONFIGURATION */
 
-saveASMSProperties_({
+const config = {
+
 eventName,
 language,
 formURL,
 letterTemplateURL,
 spreadsheetId: spreadsheet.getId(),
-formId: form.getId()
-});
+formId: form.getId(),
+folderId: folder.getId()
+
+};
+
+saveASMSProperties_(config);
+
+/* ========================*/
+registerEvent_(config);
 
 
 /* ---------------------------------
@@ -124,6 +130,9 @@ SUCCESS MESSAGE
 SpreadsheetApp.getUi().alert(
 "ASMS installed successfully.\n\nSpreadsheet created in selected folder."
 );
+
+
+
 
 }
 catch(err){
@@ -216,6 +225,7 @@ props.setProperty(
 extractGoogleId_(config.letterTemplateURL)
 );
 
+
 props.setProperty(
 "ASMS_SPREADSHEET_ID",
 config.spreadsheetId
@@ -226,7 +236,15 @@ props.setProperty(
 config.formId
 );
 
+
+props.setProperty(
+"ASMS_FOLDER_ID",
+config.folderId
+);
+
 }
+
+
 
 /*================== */
 
@@ -282,5 +300,54 @@ throw new Error("ASMS installation cancelled by user.");
 }
 
 return response.getResponseText().trim();
+
+}
+
+
+/*=================*/
+function registerEvent_(config){
+
+const registryId = PropertiesService
+.getScriptProperties()
+.getProperty("ASMS_REGISTRY_ID");
+
+let registry;
+
+if(!registryId){
+
+registry = SpreadsheetApp.create("ASMS Events Registry");
+
+PropertiesService.getScriptProperties()
+.setProperty("ASMS_REGISTRY_ID", registry.getId());
+
+}else{
+
+registry = SpreadsheetApp.openById(registryId);
+
+}
+
+const sheet = registry.getSheets()[0];
+
+if(sheet.getLastRow() === 0){
+
+sheet.appendRow([
+"eventName",
+"spreadsheetId",
+"formId",
+"folderId",
+"language",
+"created"
+]);
+
+}
+
+sheet.appendRow([
+config.eventName,
+config.spreadsheetId,
+config.formId,
+config.folderId,
+config.language,
+new Date()
+]);
 
 }

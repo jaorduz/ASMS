@@ -104,6 +104,8 @@ ${bio}
 // -----------------------------------------------------
 // Full HTML document
 // -----------------------------------------------------
+const scheduleTable = buildScheduleHtml_();
+
 const html = `
 
 <!DOCTYPE html>
@@ -133,6 +135,23 @@ margin-top:0;
 color:#444;
 }
 
+.schedule{
+width:100%;
+border-collapse:collapse;
+margin-bottom:40px;
+}
+
+.schedule th,
+.schedule td{
+border:1px solid #ddd;
+padding:10px;
+}
+
+.schedule th{
+background:#0f3d75;
+color:white;
+}
+
 .talk{
 margin-bottom:30px;
 padding-bottom:20px;
@@ -158,7 +177,11 @@ line-height:1.6;
 
 <h1>${CONFIG.EVENT.name}</h1>
 
-<h2>Program</h2>
+<h2>Conference Schedule</h2>
+
+${scheduleTable}
+
+<h2>Session Details</h2>
 
 ${talksHtml}
 

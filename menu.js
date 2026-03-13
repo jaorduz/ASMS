@@ -12,11 +12,12 @@ function onOpen(){
 
 SpreadsheetApp.getUi()
 
-.createMenu("ASMS Control Panel")
+.createMenu("ASMS")
 
 .addItem("Install ASMS Event","installASMS")
-.addSeparator()
+.addItem("Clone Event","cloneASMSEvent")
 
+.addSeparator()
 .addItem("System Diagnostics","runSystemDiagnostics")
 .addItem("System Summary","showSystemSummary")
 
