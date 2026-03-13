@@ -316,12 +316,31 @@ generateBadge(record);
 
 function getEventFolder_(){
 
-const folderId = PropertiesService
-.getScriptProperties()
-.getProperty("ASMS_EVENT_FOLDER_ID");
+const props = PropertiesService.getScriptProperties();
+
+const registryId = props.getProperty("ASMS_REGISTRY_ID");
+const activeEventId = props.getProperty("ASMS_ACTIVE_EVENT_ID");
+
+if(!registryId || !activeEventId){
+throw new Error("No active ASMS event selected.");
+}
+
+const registry = SpreadsheetApp.openById(registryId);
+const sheet = registry.getSheets()[0];
+
+const rows = sheet.getDataRange().getValues();
+rows.shift(); // remove header
+
+const eventRow = rows.find(r => r[1] === activeEventId);
+
+if(!eventRow){
+throw new Error("Active event not found in registry.");
+}
+
+const folderId = eventRow[3]; // folderId column
 
 if(!folderId){
-throw new Error("Event folder not configured.");
+throw new Error("Event folder not configured in registry.");
 }
 
 return DriveApp.getFolderById(folderId);
