@@ -218,6 +218,17 @@ background:#0f3d75;
 color:white;
 }
 
+/* Add here */
+
+.zoom-link{
+color:#2c7be5;
+text-decoration:none;
+font-weight:bold;
+}
+
+.zoom-link:hover{
+text-decoration:underline;
+}
 /* Speaker grid */
 
 .grid{
