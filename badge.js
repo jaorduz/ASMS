@@ -326,7 +326,7 @@ justify-content:center;
 align-items:center;
 
 width:141.5mm;
-height:98mm;
+height:85mm;
 
 border:1.5px solid #0f3d75;
 padding:3mm;
