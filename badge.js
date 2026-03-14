@@ -130,9 +130,64 @@ SpreadsheetApp.getUi().alert("No confirmed speakers.");
 return;
 }
 
+let pages = "";
+
+for(let i=0;i<confirmed.length;i+=2){
+
+const left = buildBadgeFront_(confirmed[i]);
+
+const right =
+confirmed[i+1]
+? buildBadgeFront_(confirmed[i+1])
+: "";
+
+pages += `
+<div class="page">
+
+<div class="badge">${left}</div>
+
+<div class="badge">${right}</div>
+
+</div>
+`;
+
+}
+
+
+/*======*/
+let backPages = "";
+
+for(let i=0;i<confirmed.length;i+=2){
+
+const left = buildBadgeBack_(confirmed[i]);
+
+const right =
+confirmed[i+1]
+? buildBadgeBack_(confirmed[i+1])
+: "";
+
+backPages += `
+<div class="page">
+
+<div class="badge">${left}</div>
+
+<div class="badge">${right}</div>
+
+</div>
+`;
+
+}
+
+pages += backPages;
+
+
+
+const html = buildBadgeDocument_(pages);
+
 const eventFolder = getEventFolder_();
 
 let badgesFolder;
+
 const folders = eventFolder.getFoldersByName("badges");
 
 if(folders.hasNext()){
@@ -141,153 +196,12 @@ badgesFolder = folders.next();
 badgesFolder = eventFolder.createFolder("badges");
 }
 
+const blob =
+Utilities.newBlob(html,"text/html","badge_sheet.html")
+.getAs("application/pdf");
 
-/* ---------------------------
-Build badge HTML
---------------------------- */
-
-let front = "";
-let back = "";
-
-confirmed.forEach(r=>{
-
-const name =
-escapeHtml_(formatValue_(r.speakerName) + " " + formatValue_(r.speakerLastName));
-
-const institution =
-escapeHtml_(formatValue_(r.institution || ""));
-
-const topic =
-escapeHtml_(formatValue_(r.TopicGral));
-
-const social =
-r.speakerLinkedin ||
-r.speakerWebsite ||
-"";
-
-const qr =
-social ?
-"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" +
-encodeURIComponent(social)
-: "";
-
-
-
-front += `
-<div class="badge">
-<h2>${name}</h2>
-<div class="inst">${institution}</div>
-<div class="event">${CONFIG.EVENT.name}</div>
-</div>
-`;
-
-
-
-back += `
-<div class="badge">
-${qr ? `<img src="${qr}" class="qr">` : ""}
-<div class="topic">${topic}</div>
-</div>
-`;
-
-});
-
-
-/* ---------------------------
-A4 Landscape Layout
---------------------------- */
-
-const html = `
-<!DOCTYPE html>
-<html>
-<head>
-
-<style>
-
-@page {
-size:A4 landscape;
-margin:15mm;
-}
-
-body{
-font-family:Arial;
-}
-
-.page{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10mm;
-page-break-after:always;
-}
-
-.badge{
-width:100%;
-height:90mm;
-border:2px solid #0f3d75;
-border-radius:10px;
-padding:20px;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-}
-
-.badge h2{
-margin:0;
-font-size:28px;
-}
-
-.inst{
-font-size:16px;
-color:#555;
-margin-top:5px;
-}
-
-.event{
-margin-top:10px;
-font-size:14px;
-color:#0f3d75;
-}
-
-.qr{
-width:120px;
-margin-bottom:10px;
-}
-
-.topic{
-font-size:16px;
-font-weight:bold;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="page">
-${front}
-</div>
-
-<div class="page">
-${back}
-</div>
-
-</body>
-</html>
-`;
-
-
-/* ---------------------------
-Save PDF
---------------------------- */
-
-const blob = Utilities.newBlob(html,"text/html","badges.html");
-
-const file = badgesFolder.createFile(blob).getAs("application/pdf");
-
-file.setName("badge_sheets.pdf");
+badgesFolder.createFile(blob)
+.setName(CONFIG.EVENT.name + "_badge_sheets.pdf");
 
 SpreadsheetApp.getUi().alert("Badge sheets generated.");
 
@@ -298,13 +212,42 @@ SpreadsheetApp.getUi().alert("Badge sheets generated.");
 /**
  * Badge layout used inside sheets
  */
-function buildBadgeHtml_(record){
+function buildBadgeFront_(record){
 
 const name =
 escapeHtml_(record.speakerName + " " + record.speakerLastName);
 
 const institution =
 escapeHtml_(record.institution || "");
+
+return `
+<div style="text-align:center">
+
+<h3 style="margin:0;color:#0f3d75">
+${CONFIG.EVENT.name}
+</h3>
+
+<h2 style="margin:10px 0">
+${name}
+</h2>
+
+${institution ? `
+<div style="font-size:14px;color:#555">
+${institution}
+</div>
+` : ""}
+
+<div style="margin-top:12px;font-weight:bold">
+Speaker
+</div>
+
+</div>
+`;
+
+}
+
+/**====== back */
+function buildBadgeBack_(record){
 
 const topic =
 escapeHtml_(record.TopicGral || "");
@@ -314,30 +257,33 @@ record.speakerLinkedin ||
 record.speakerWebsite ||
 "";
 
-const qr = social
-? "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" +
-encodeURIComponent(social)
-: "";
+let qr = "";
+
+if(social){
+
+qr =
+"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" +
+encodeURIComponent(social);
+
+}
 
 return `
 <div style="text-align:center">
 
-<h3>${CONFIG.EVENT.name}</h3>
+<h3 style="margin:0;color:#0f3d75">
+${CONFIG.EVENT.name}
+</h3>
 
-<h2>${name}</h2>
+${qr ? `<img src="${qr}" width="90" style="margin-top:10px">` : ""}
 
-<div>${institution}</div>
-
-${qr ? `<img src="${qr}" width="70">` : ""}
-
-<div style="font-size:11px">${topic}</div>
+<div style="font-size:12px;margin-top:10px">
+${topic}
+</div>
 
 </div>
 `;
 
 }
-
-
 
 /**
  * A4 page layout
@@ -353,19 +299,20 @@ return `
 <style>
 
 @page{
-size:A4;
-margin:10mm;
+size:A4 landscape;
+margin:8mm;
 }
 
 .page{
 display:flex;
-justify-content:space-between;
-margin-bottom:20mm;
+justify-content:space-around;
+align-items:center;
+margin-bottom:15mm;
 }
 
 .badge{
-width:90mm;
-height:60mm;
+width:145mm;
+height:95mm;
 border:2px solid #0f3d75;
 padding:8mm;
 box-sizing:border-box;
