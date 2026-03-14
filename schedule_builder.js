@@ -43,6 +43,9 @@ return sessions;
 
 function buildScheduleHtml_(){
 
+    // Temporary
+console.log("Schedule builder loaded");
+
 const sessions = buildScheduleData_();
 
 if(!sessions.length){
