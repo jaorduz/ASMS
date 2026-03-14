@@ -304,18 +304,24 @@ margin:8mm;
 }
 
 .page{
+width:100%;
+height:190mm;
 display:flex;
-justify-content:space-around;
+justify-content:space-between;
 align-items:center;
-margin-bottom:15mm;
+page-break-after:always;
 }
 
 .badge{
-width:145mm;
+width:140mm;
 height:95mm;
 border:2px solid #0f3d75;
 padding:8mm;
 box-sizing:border-box;
+page-break-inside:avoid;
+display:flex;
+flex-direction:column;
+justify-content:center;
 }
 
 </style>
