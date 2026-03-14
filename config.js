@@ -24,7 +24,7 @@ const CONFIG = {
     code: "RAB2026",
     name: "Research Accelerator Bootcamp",
     webpageTitle: "Research Accelerator Bootcamp Speakers",
-    confirmDeadline: "March 13, 2026"
+    confirmDeadline: "March 18, 2026"
   },
 
   ORGANIZER: {
