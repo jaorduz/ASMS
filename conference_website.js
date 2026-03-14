@@ -217,6 +217,22 @@ white-space:nowrap;
 .schedule th{
 background:#0f3d75;
 color:white;
+padding:10px;
+text-align:left;
+}
+
+.schedule td{
+padding:10px;
+border-bottom:1px solid #ddd;
+font-size:14px;
+vertical-align:top;
+}
+
+.schedule th:nth-child(4),
+.schedule td:nth-child(4){
+text-align:center;
+white-space:nowrap;
+width:140px;
 }
 
 /* Add here */
@@ -225,10 +241,11 @@ color:white;
 display:inline-block;
 background:#2c7be5;
 color:white;
-padding:6px 10px;
-border-radius:5px;
+padding:6px 12px;
+border-radius:6px;
 text-decoration:none;
 font-size:13px;
+font-weight:bold;
 }
 
 .zoom-link:hover{
