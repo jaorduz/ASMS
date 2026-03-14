@@ -49,6 +49,9 @@ escapeHtml_(r.speakerName + " " + r.speakerLastName);
 const topic =
 escapeHtml_(r.TopicGral);
 
+const promo =
+escapeHtml_(r.PromotionalText || "");
+
 const bio =
 escapeHtml_(r.speakerBio || "");
 
@@ -62,24 +65,38 @@ return `
 
 <div class="speaker-card">
 
-<img src="${photo}" class="speaker-photo">
+<img src="${photo}" style="
+width:100%;
+height:220px;
+object-fit:cover;
+border-radius:8px">
 
 <h3>${name}</h3>
 
-<div class="speaker-inst">
+<div style="color:#666;font-size:14px;margin-bottom:6px">
 ${institution}
 </div>
 
-<div class="talk-title">
+<div style="font-weight:bold;color:#0f3d75">
 ${topic}
 </div>
 
-<p class="speaker-bio">
+<div style="
+margin-top:10px;
+padding:12px;
+background:#f5f7fb;
+border-left:4px solid #0f3d75;
+font-size:14px;
+line-height:1.6;
+">
+${promo}
+</div>
+
+<p style="font-size:14px;margin-top:10px">
 ${bio}
 </p>
 
 </div>
-
 `;
 
 }).join("");
