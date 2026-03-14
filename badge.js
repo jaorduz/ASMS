@@ -304,10 +304,13 @@ margin:8mm;
 }
 
 .page{
-display:flex;
-justify-content:space-between;
+width:277mm;
+height:190mm;
+display:grid;
+grid-template-columns:1fr 1fr;
+grid-template-rows:1fr 1fr;
 gap:10mm;
-margin-bottom:10mm;
+page-break-after:always;
 }
 
 .badge{
@@ -315,7 +318,7 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 width:145mm;
-height:75mm;
+height:85mm;
 border:2px solid #0f3d75;
 padding:8mm;
 box-sizing:border-box;
