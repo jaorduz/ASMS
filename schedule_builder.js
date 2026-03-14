@@ -23,7 +23,7 @@ title:r.TopicGral,
 speaker:r.speakerName+" "+r.speakerLastName,
 institution:r.institution || "",
 zoomLink:r.zoomLink || "",
-promo:r.PromotionalText || ""
+promo:formatValue_(r.PromotionalText)
 
 };
 
@@ -87,9 +87,13 @@ ${escapeHtml_(s.institution)}
 </tr>
 
 <tr>
+${s.promo ? `
+<tr>
 <td colspan="4" class="session-description">
 ${escapeHtml_(s.promo)}
 </td>
+</tr>
+` : ``}
 </tr>
 `;
 });
