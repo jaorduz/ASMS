@@ -250,6 +250,7 @@ font-weight:bold;
 
 .zoom-link:hover{
 background:#1a5ed9;
+text-decoration:underline;
 }
 /* Speaker grid */
 

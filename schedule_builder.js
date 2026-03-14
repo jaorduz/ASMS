@@ -51,31 +51,32 @@ return "<p>No confirmed sessions yet.</p>";
 
 let html = `
 <table class="schedule">
-
-<thead>
 <tr>
 <th>Time</th>
 <th>Session</th>
 <th>Speaker</th>
 <th>Join</th>
 </tr>
-</thead>
-
-<tbody>
 `;
 
-sessions.forEach(s=>{
+sessions.forEach(s => {
 
-const zoomUrl = formatValue_(s.zoomLink);
+const zoomHtml = s.zoomLink
+? `<a class="zoom-link" href="${s.zoomLink}" target="_blank" rel="noopener noreferrer">Join Session</a>`
+: `<span style="color:#999;">—</span>`;
 
-const zoom =
-zoomUrl
-? `<a class="zoom-link" href="${zoomUrl}" target="_blank" rel="noopener noreferrer">Join Session</a>`
-: `<span style="color:#999;">No link</span>`;
+const promoHtml = s.promo
+? `
+<tr>
+<td colspan="4" class="session-description">
+${escapeHtml_(s.promo)}
+</td>
+</tr>
+`
+: "";
 
 html += `
 <tr>
-
 <td>${escapeHtml_(s.time)}</td>
 
 <td class="talk-title">
@@ -84,31 +85,94 @@ ${escapeHtml_(s.title)}
 
 <td>
 ${escapeHtml_(s.speaker)}<br>
-<span style="font-size:12px;color:#666">
+<span style="font-size:12px;color:#666;">
 ${escapeHtml_(s.institution)}
 </span>
 </td>
 
 <td>
-${zoom}
-</td>
-
-</tr>
-
-<tr>
-<td colspan="4" class="session-description">
-${escapeHtml_(s.promo)}
+${zoomHtml}
 </td>
 </tr>
+
+${promoHtml}
 `;
 
 });
 
-html += `
-</tbody>
-</table>
-`;
+html += `</table>`;
 
 return html;
-
 }
+
+// function buildScheduleHtml_(){
+
+// const sessions = buildScheduleData_();
+
+// if(!sessions.length){
+// return "<p>No confirmed sessions yet.</p>";
+// }
+
+// let html = `
+// <table class="schedule">
+
+// <thead>
+// <tr>
+// <th>Time</th>
+// <th>Session</th>
+// <th>Speaker</th>
+// <th>Join</th>
+// </tr>
+// </thead>
+
+// <tbody>
+// `;
+
+// sessions.forEach(s=>{
+
+// const zoomUrl = formatValue_(s.zoomLink);
+
+// const zoom =
+// zoomUrl
+// ? `<a class="zoom-link" href="${zoomUrl}" target="_blank" rel="noopener noreferrer">Join Session</a>`
+// : `<span style="color:#999;">No link</span>`;
+
+// html += `
+// <tr>
+
+// <td>${escapeHtml_(s.time)}</td>
+
+// <td class="talk-title">
+// ${escapeHtml_(s.title)}
+// </td>
+
+// <td>
+// ${escapeHtml_(s.speaker)}<br>
+// <span style="font-size:12px;color:#666">
+// ${escapeHtml_(s.institution)}
+// </span>
+// </td>
+
+// <td>
+// ${zoom}
+// </td>
+
+// </tr>
+
+// <tr>
+// <td colspan="4" class="session-description">
+// ${escapeHtml_(s.promo)}
+// </td>
+// </tr>
+// `;
+
+// });
+
+// html += `
+// </tbody>
+// </table>
+// `;
+
+// return html;
+
+// }
