@@ -300,7 +300,7 @@ return `
 
 @page{
 size:A4 landscape;
-margin:5mm;
+margin:4mm;
 }
 
 body{
@@ -309,16 +309,16 @@ font-family:Arial;
 }
 
 .page{
-// width:289mm;
-// height:202mm;
+width:289mm;
+height:200mm;
 display:grid;
 grid-template-columns:1fr 1fr;
 grid-template-rows:1fr 1fr;
 gap:2mm;
 page-break-after:always;
 box-sizing:border-box;
-width:100%;
-height:100%;
+// width:100%;
+// height:100%;
 }
 
 .badge{
@@ -327,11 +327,11 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 
-width:141.5mm;
-height:85mm;
+width:100%;
+height:95mm;
 
 border:1.5px solid #0f3d75;
-padding:0mm;
+padding:3mm;
 
 box-sizing:border-box;
 overflow:hidden;
