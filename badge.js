@@ -300,7 +300,7 @@ return `
 
 @page{
 size:A4 landscape;
-margin:6mm;
+margin:3mm;
 }
 
 body{
@@ -313,7 +313,7 @@ height:198mm;             /* 210 - 12 */
 display:grid;
 grid-template-columns:137.5mm 137.5mm;   /* (285 - 10) / 2 */
 grid-template-rows:94mm 94mm;            /* (198 - 10) / 2 */
-gap:10mm;
+gap:6mm;
 page-break-after:always;
 box-sizing:border-box;
 }
