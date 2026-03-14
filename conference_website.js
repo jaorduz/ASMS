@@ -207,10 +207,11 @@ border-collapse:collapse;
 margin-bottom:40px;
 }
 
-.schedule th,
-.schedule td{
-border:1px solid #ddd;
-padding:10px;
+
+.schedule th:nth-child(4),
+.schedule td:nth-child(4){
+text-align:center;
+white-space:nowrap;
 }
 
 .schedule th{
@@ -221,13 +222,17 @@ color:white;
 /* Add here */
 
 .zoom-link{
-color:#2c7be5;
+display:inline-block;
+background:#2c7be5;
+color:white;
+padding:6px 10px;
+border-radius:5px;
 text-decoration:none;
-font-weight:bold;
+font-size:13px;
 }
 
 .zoom-link:hover{
-text-decoration:underline;
+background:#1a5ed9;
 }
 /* Speaker grid */
 
