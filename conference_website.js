@@ -113,6 +113,27 @@ function buildConferenceWebsite_(){
 const schedule = buildScheduleHtml_();
 const speakers = buildSpeakerCards_();
 
+
+/*====================*/
+const eventFolder = getEventFolder_();
+
+let programFolder;
+
+const folders = eventFolder.getFoldersByName("program");
+
+if (folders.hasNext()){
+programFolder = folders.next();
+}else{
+programFolder = eventFolder.createFolder("program");
+}
+
+const calendarBlob = generateConferenceCalendar_();
+
+const calendarFile = programFolder.createFile(calendarBlob);
+
+const calendarUrl = calendarFile.getUrl();
+/*====================*/
+
 return `
 <!DOCTYPE html>
 
@@ -268,7 +289,26 @@ line-height:1.6;
 
 <div class="container">
 
-<h2 id="program">Program</h2>
+<h2>Program</h2>
+
+<p style="
+margin-bottom:20px;
+font-size:14px;
+">
+
+<a href="${calendarUrl}" target="_blank"
+style="
+background:#0f3d75;
+color:white;
+padding:10px 16px;
+border-radius:6px;
+text-decoration:none;
+font-weight:bold;
+">
+Download Conference Calendar (.ics)
+</a>
+
+</p>
 
 ${schedule}
 
