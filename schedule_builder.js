@@ -52,33 +52,45 @@ return "<p>No confirmed sessions yet.</p>";
 let html = `
 <table class="schedule">
 
+<thead>
 <tr>
 <th>Time</th>
 <th>Session</th>
 <th>Speaker</th>
 <th>Join</th>
 </tr>
+</thead>
+
+<tbody>
 `;
 
 sessions.forEach(s=>{
 
-// const zoom =
-// s.zoomLink ? `<a class="zoom-link" href="${s.zoomLink}" target="_blank">Join Session</a>`: "";
-const zoom = `<a class="zoom-link" href="${s.zoomLink || "#"}" target="_blank">Join Session</a>`;
+const zoom =
+s.zoomLink
+? `<a class="zoom-link" href="${s.zoomLink}" target="_blank">Join Session</a>`
+: "";
 
 html += `
 <tr>
+
 <td>${escapeHtml_(s.time)}</td>
-<td class="talk-title">${escapeHtml_(s.title)}</td>
+
+<td class="talk-title">
+${escapeHtml_(s.title)}
+</td>
+
 <td>
 ${escapeHtml_(s.speaker)}<br>
 <span style="font-size:12px;color:#666">
 ${escapeHtml_(s.institution)}
 </span>
 </td>
+
 <td>
 ${zoom}
 </td>
+
 </tr>
 
 <tr>
@@ -90,7 +102,10 @@ ${escapeHtml_(s.promo)}
 
 });
 
-html += "</table>";
+html += `
+</tbody>
+</table>
+`;
 
 return html;
 
