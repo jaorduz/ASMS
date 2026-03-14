@@ -328,10 +328,10 @@ justify-content:center;
 align-items:center;
 
 width:141.5mm;
-height:55mm;
+height:85mm;
 
 border:1.5px solid #0f3d75;
-padding:3mm;
+padding:0mm;
 
 box-sizing:border-box;
 overflow:hidden;
