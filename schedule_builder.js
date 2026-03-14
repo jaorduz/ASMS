@@ -70,7 +70,7 @@ const zoomUrl = formatValue_(s.zoomLink);
 
 const zoom =
 zoomUrl
-? `<a class="zoom-link" href="${escapeAttribute_(zoomUrl)}" target="_blank" rel="noopener noreferrer">Join Session</a>`
+? `<a class="zoom-link" href="${zoomUrl}"" target="_blank" rel="noopener noreferrer">Join Session</a>`
 : `<span style="color:#999;">No link</span>`;
 
 html += `
