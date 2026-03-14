@@ -19,111 +19,18 @@
 
 function generateProgramBooklet(){
 
-const {records} = getData_();
-
-
-// -----------------------------------------------------
-// Filter confirmed speakers
-// -----------------------------------------------------
-const confirmed = records.filter(r =>
-normalizeConfirmationStatus_(r.confirmationStatus) == "Confirmed"
-);
-
-
-
-// -----------------------------------------------------
-// Sort by date and time
-// -----------------------------------------------------
-confirmed.sort((a,b)=>{
-
-const d1 = parseDateTime_(a.DateTalk,a.TimeStartTalk);
-const d2 = parseDateTime_(b.DateTalk,b.TimeStartTalk);
-
-return d1 - d2;
-
-});
-
-
-
-// -----------------------------------------------------
-// Build program content
-// -----------------------------------------------------
-let talksHtml = "";
-
-confirmed.forEach(r=>{
-
-const name =
-escapeHtml_(r.speakerName + " " + r.speakerLastName);
-
-const topic =
-escapeHtml_(r.TopicGral);
-
-const institution =
-escapeHtml_(r.institution || "");
-
-const bio =
-escapeHtml_(r.speakerBio || "");
-
-const date =
-formatDateForDisplay_(r.DateTalk);
-
-const time =
-formatTimeForDisplay_(r.TimeStartTalk);
-
-
-talksHtml += `
-
-<div class="talk">
-
-<h3>${topic}</h3>
-
-<p class="meta">
-
-<strong>Speaker:</strong> ${name}<br>
-
-<strong>Institution:</strong> ${institution}<br>
-
-<strong>Date:</strong> ${date}<br>
-
-<strong>Time:</strong> ${time}
-
-</p>
-
-<p class="bio">
-${bio}
-</p>
-
-</div>
-
-`;
-
-});
-
-
-
-// -----------------------------------------------------
-// Full HTML document
-// -----------------------------------------------------
-const scheduleTable = buildScheduleHtml_();
+const schedule = buildScheduleHtml_();
 
 const html = `
-
 <!DOCTYPE html>
-
 <html>
-
 <head>
-
 <meta charset="UTF-8">
-
-<title>${CONFIG.EVENT.name} Program</title>
-
 <style>
 
 body{
 font-family:Arial;
 margin:40px;
-background:#ffffff;
 }
 
 h1{
@@ -138,13 +45,12 @@ color:#444;
 .schedule{
 width:100%;
 border-collapse:collapse;
-margin-bottom:40px;
 }
 
 .schedule th,
 .schedule td{
-border:1px solid #ddd;
-padding:10px;
+border:1px solid #ccc;
+padding:8px;
 }
 
 .schedule th{
@@ -152,54 +58,70 @@ background:#0f3d75;
 color:white;
 }
 
-.talk{
-margin-bottom:30px;
-padding-bottom:20px;
-border-bottom:1px solid #ddd;
-}
-
-.meta{
-font-size:14px;
-color:#444;
-}
-
-.bio{
-font-size:14px;
-margin-top:10px;
-line-height:1.6;
-}
-
 </style>
-
 </head>
 
 <body>
 
 <h1>${CONFIG.EVENT.name}</h1>
+<h2>Conference Program</h2>
 
-<h2>Conference Schedule</h2>
-
-${scheduleTable}
-
-<h2>Session Details</h2>
-
-${talksHtml}
+${schedule}
 
 </body>
-
 </html>
-
 `;
 
 
+/* -------------------------------------------------
+GET EVENT FOLDER
+------------------------------------------------- */
 
-// -----------------------------------------------------
-// Save file in Google Drive
-// -----------------------------------------------------
-DriveApp.createFile(
-"program.html",
+const eventFolder = getEventFolder_();
+
+/* -------------------------------------------------
+CREATE OR GET "program" SUBFOLDER
+------------------------------------------------- */
+
+let programFolder;
+
+const folders = eventFolder.getFoldersByName("program");
+
+if(folders.hasNext()){
+programFolder = folders.next();
+}else{
+programFolder = eventFolder.createFolder("program");
+}
+
+
+/* -------------------------------------------------
+CREATE TEMP HTML FILE
+------------------------------------------------- */
+
+const htmlBlob = Utilities.newBlob(
 html,
-MimeType.HTML
+"text/html",
+"program.html"
 );
+
+const htmlFile = programFolder.createFile(htmlBlob);
+
+
+/* -------------------------------------------------
+CONVERT TO PDF
+------------------------------------------------- */
+
+const pdfBlob = htmlFile.getBlob().getAs("application/pdf");
+
+programFolder.createFile(
+pdfBlob.setName("program.pdf")
+);
+
+
+/* -------------------------------------------------
+OPTIONAL: REMOVE HTML FILE
+------------------------------------------------- */
+
+htmlFile.setTrashed(true);
 
 }
