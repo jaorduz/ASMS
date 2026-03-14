@@ -64,15 +64,8 @@ sessions.forEach(s=>{
 
 const zoom =
 s.zoomLink
-? `<a class="zoom-link" href="${s.zoomLink}" target="_blank">Join</a>`
+? `<a class="zoom-link" href="${s.zoomLink}" target="_blank">Join Session</a>`
 : "";
-
-const calendar =
-`<a class="zoom-link"
-href="?calendar=${s.calendarId}"
-target="_blank">
-Add to Calendar
-</a>`;
 
 html += `
 <tr>
@@ -90,27 +83,14 @@ ${escapeHtml_(s.institution)}
 </span>
 </td>
 
-<td>
-${zoom}
-<br>
-${calendar}
-</td>
+<td>${zoom}</td>
+
 </tr>
 
 <tr>
-
-<td colspan="4" style="
-background:#f7f9fc;
-padding:14px;
-font-size:14px;
-line-height:1.6;
-border-left:4px solid #0f3d75;
-">
-
+<td colspan="4" class="session-description">
 ${escapeHtml_(s.promo)}
-
 </td>
-
 </tr>
 `;
 
