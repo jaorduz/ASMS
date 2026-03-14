@@ -137,3 +137,62 @@ END:VCALENDAR`;
   );
 
 }
+
+/**========= */
+
+function generateConferenceCalendar_(){
+
+const {records} = getData_();
+
+const confirmed = records.filter(r =>
+normalizeConfirmationStatus_(r.confirmationStatus) === "Confirmed"
+);
+
+let events = "";
+
+confirmed.forEach(r=>{
+
+const start = parseDateTime_(r.DateTalk,r.TimeStartTalk);
+
+if(!start) return;
+
+const duration = parseDurationMinutes_(r.LastingTalk);
+
+const end = new Date(start.getTime() + duration*60000);
+
+const title = formatValue_(r.TopicGral);
+
+const speaker =
+formatValue_(r.speakerName) + " " + formatValue_(r.speakerLastName);
+
+const zoom = r.zoomLink || "";
+
+events += `
+BEGIN:VEVENT
+UID:${Utilities.getUuid()}
+DTSTAMP:${Utilities.formatDate(new Date(),"UTC","yyyyMMdd'T'HHmmss'Z'")}
+DTSTART:${Utilities.formatDate(start,"UTC","yyyyMMdd'T'HHmmss'Z'")}
+DTEND:${Utilities.formatDate(end,"UTC","yyyyMMdd'T'HHmmss'Z'")}
+SUMMARY:${escapeIcsText_(title)}
+DESCRIPTION:${escapeIcsText_("Speaker: " + speaker)}
+URL:${escapeIcsText_(zoom)}
+END:VEVENT
+`;
+
+});
+
+const calendar =
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ASMS//Conference//EN
+${events}
+END:VCALENDAR
+`;
+
+return Utilities.newBlob(
+calendar,
+"text/calendar",
+"conference_schedule.ics"
+);
+
+}

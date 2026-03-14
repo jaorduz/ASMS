@@ -21,7 +21,8 @@ date:r.DateTalk,
 time:r.TimeStartTalk,
 title:r.TopicGral,
 speaker:r.speakerName+" "+r.speakerLastName,
-institution:r.institution || ""
+institution:r.institution || "",
+zoomLink:r.zoomLink || ""
 
 };
 
@@ -35,7 +36,8 @@ return sessions;
 
 }
 
-/*=======BUlD HTML schedule table==*/
+
+/*======= BUILD HTML schedule table ======*/
 
 function buildScheduleHtml_(){
 
@@ -47,24 +49,42 @@ return "<p>No confirmed sessions yet.</p>";
 
 let html = `
 <table class="schedule">
+
 <tr>
 <th>Time</th>
 <th>Session</th>
 <th>Speaker</th>
+<th>Join</th>
 </tr>
 `;
 
 sessions.forEach(s=>{
 
+const zoom =
+s.zoomLink
+? `<a class="zoom-link" href="${s.zoomLink}">Join Session</a>`
+: "";
+
 html += `
 <tr>
+
 <td>${escapeHtml_(s.time)}</td>
-<td>${escapeHtml_(s.title)}</td>
-<td>${escapeHtml_(s.speaker)}<br>
+
+<td class="talk-title">
+${escapeHtml_(s.title)}
+</td>
+
+<td>
+${escapeHtml_(s.speaker)}<br>
 <span style="font-size:12px;color:#666">
 ${escapeHtml_(s.institution)}
 </span>
 </td>
+
+<td>
+${zoom}
+</td>
+
 </tr>
 `;
 

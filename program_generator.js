@@ -29,33 +29,50 @@ const html = `
 <style>
 
 body{
-font-family:Arial;
-margin:40px;
+font-family: "Helvetica Neue", Arial, sans-serif;
+margin:50px;
+color:#222;
 }
 
 h1{
 color:#0f3d75;
+font-size:32px;
+margin-bottom:5px;
 }
 
 h2{
-margin-top:0;
 color:#444;
+margin-bottom:30px;
 }
 
 .schedule{
 width:100%;
 border-collapse:collapse;
-}
-
-.schedule th,
-.schedule td{
-border:1px solid #ccc;
-padding:8px;
+margin-top:20px;
 }
 
 .schedule th{
 background:#0f3d75;
 color:white;
+padding:10px;
+text-align:left;
+}
+
+.schedule td{
+border-bottom:1px solid #ddd;
+padding:10px;
+font-size:14px;
+}
+
+.talk-title{
+font-weight:bold;
+color:#0f3d75;
+}
+
+.zoom-link{
+color:#2c7be5;
+text-decoration:none;
+font-weight:bold;
 }
 
 </style>
@@ -63,7 +80,7 @@ color:white;
 
 <body>
 
-<h1>${CONFIG.EVENT.name}</h1>
+<h1>${escapeHtml_(CONFIG.EVENT.name)}</h1>
 <h2>Conference Program</h2>
 
 ${schedule}
@@ -111,12 +128,22 @@ const htmlFile = programFolder.createFile(htmlBlob);
 CONVERT TO PDF
 ------------------------------------------------- */
 
-const pdfBlob = htmlFile.getBlob().getAs("application/pdf");
+const pdfBlob = htmlFile.getBlob().getAs(MimeType.PDF);
 
 programFolder.createFile(
-pdfBlob.setName("program.pdf")
+pdfBlob.setName(
+sanitizeFilename_(CONFIG.EVENT.name) + "_program.pdf"
+)
 );
 
+
+
+
+/*====== */
+
+const calendarBlob = generateConferenceCalendar_();
+
+programFolder.createFile(calendarBlob);
 
 /* -------------------------------------------------
 OPTIONAL: REMOVE HTML FILE
