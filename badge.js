@@ -132,50 +132,41 @@ return;
 
 let pages = "";
 
-for(let i=0;i<confirmed.length;i+=2){
+for(let i=0;i<confirmed.length;i+=4){
 
-const left = buildBadgeFront_(confirmed[i]);
-
-const right =
-confirmed[i+1]
-? buildBadgeFront_(confirmed[i+1])
-: "";
+const b1 = confirmed[i]   ? buildBadgeFront_(confirmed[i])   : "";
+const b2 = confirmed[i+1] ? buildBadgeFront_(confirmed[i+1]) : "";
+const b3 = confirmed[i+2] ? buildBadgeFront_(confirmed[i+2]) : "";
+const b4 = confirmed[i+3] ? buildBadgeFront_(confirmed[i+3]) : "";
 
 pages += `
 <div class="page">
-
-<div class="badge">${left}</div>
-
-<div class="badge">${right}</div>
-
+  <div class="badge">${b1}</div>
+  <div class="badge">${b2}</div>
+  <div class="badge">${b3}</div>
+  <div class="badge">${b4}</div>
 </div>
 `;
-
 }
-
 
 /*======*/
 let backPages = "";
 
-for(let i=0;i<confirmed.length;i+=2){
+for(let i=0;i<confirmed.length;i+=4){
 
-const left = buildBadgeBack_(confirmed[i]);
-
-const right =
-confirmed[i+1]
-? buildBadgeBack_(confirmed[i+1])
-: "";
+const b1 = confirmed[i]   ? buildBadgeBack_(confirmed[i])   : "";
+const b2 = confirmed[i+1] ? buildBadgeBack_(confirmed[i+1]) : "";
+const b3 = confirmed[i+2] ? buildBadgeBack_(confirmed[i+2]) : "";
+const b4 = confirmed[i+3] ? buildBadgeBack_(confirmed[i+3]) : "";
 
 backPages += `
 <div class="page">
-
-<div class="badge">${left}</div>
-
-<div class="badge">${right}</div>
-
+  <div class="badge">${b1}</div>
+  <div class="badge">${b2}</div>
+  <div class="badge">${b3}</div>
+  <div class="badge">${b4}</div>
 </div>
 `;
-
 }
 
 pages += backPages;
@@ -314,8 +305,9 @@ height:202mm;
 display:grid;
 grid-template-columns:1fr 1fr;
 grid-template-rows:1fr 1fr;
-gap:1mm;
+gap:5mm;
 box-sizing:border-box;
+page-break-after:always;
 }
 
 .badge{
@@ -323,17 +315,15 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-
 width:100%;
-height:92mm;   /* KEY VALUE */
-
+height:100%;
 border:1.5px solid #0f3d75;
 padding:3mm;
-
 box-sizing:border-box;
 overflow:hidden;
 text-align:center;
 }
+
 </style>
 
 </head>
@@ -341,7 +331,7 @@ text-align:center;
 <body>
 
 ${pages}
-${pages}
+
 
 
 </body>
