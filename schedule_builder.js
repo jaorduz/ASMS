@@ -43,9 +43,6 @@ return sessions;
 
 function buildScheduleHtml_(){
 
-    // Temporary
-console.log("Schedule builder loaded");
-
 const sessions = buildScheduleData_();
 
 if(!sessions.length){
@@ -54,6 +51,7 @@ return "<p>No confirmed sessions yet.</p>";
 
 let html = `
 <table class="schedule">
+
 <tr>
 <th>Time</th>
 <th>Session</th>
@@ -62,24 +60,16 @@ let html = `
 </tr>
 `;
 
-sessions.forEach(s => {
+sessions.forEach(s=>{
 
-const zoomHtml = s.zoomLink
-? `<a class="zoom-link" href="${s.zoomLink}" target="_blank" rel="noopener noreferrer">Join Session</a>`
-: `<span style="color:#999;">—</span>`;
-
-const promoHtml = s.promo
-? `
-<tr>
-<td colspan="4" class="session-description">
-${escapeHtml_(s.promo)}
-</td>
-</tr>
-`
+const zoom =
+s.zoomLink
+? `<a class="zoom-link" href="${s.zoomLink}" target="_blank">Join</a>`
 : "";
 
 html += `
 <tr>
+
 <td>${escapeHtml_(s.time)}</td>
 
 <td class="talk-title">
@@ -88,25 +78,99 @@ ${escapeHtml_(s.title)}
 
 <td>
 ${escapeHtml_(s.speaker)}<br>
-<span style="font-size:12px;color:#666;">
+<span style="font-size:12px;color:#666">
 ${escapeHtml_(s.institution)}
 </span>
 </td>
 
-<td>
-${zoomHtml}
-</td>
+<td>${zoom}</td>
+
 </tr>
 
-${promoHtml}
+<tr>
+<td colspan="4" class="session-description">
+${escapeHtml_(s.promo)}
+</td>
+</tr>
 `;
 
 });
 
-html += `</table>`;
+html += "</table>";
 
 return html;
+
 }
+
+
+// function buildScheduleHtml_(){
+
+//     // Temporary
+// console.log("Schedule builder loaded");
+
+// const sessions = buildScheduleData_();
+
+// if(!sessions.length){
+// return "<p>No confirmed sessions yet.</p>";
+// }
+
+// let html = `
+// <table class="schedule">
+// <tr>
+// <th>Time</th>
+// <th>Session</th>
+// <th>Speaker</th>
+// <th>Join</th>
+// </tr>
+// `;
+
+// sessions.forEach(s => {
+
+// const zoomHtml = s.zoomLink
+// ? `<a class="zoom-link" href="${s.zoomLink}" target="_blank" rel="noopener noreferrer">Join Session</a>`
+// : `<span style="color:#999;">—</span>`;
+
+// const promoHtml = s.promo
+// ? `
+// <tr>
+// <td colspan="4" class="session-description">
+// ${escapeHtml_(s.promo)}
+// </td>
+// </tr>
+// `
+// : "";
+
+// html += `
+// <tr>
+// <td>${escapeHtml_(s.time)}</td>
+
+// <td class="talk-title">
+// ${escapeHtml_(s.title)}
+// </td>
+
+// <td>
+// ${escapeHtml_(s.speaker)}<br>
+// <span style="font-size:12px;color:#666;">
+// ${escapeHtml_(s.institution)}
+// </span>
+// </td>
+
+// <td>
+// ${zoomHtml}
+// </td>
+// </tr>
+
+// ${promoHtml}
+// `;
+
+// });
+
+// html += `</table>`;
+
+// return html;
+// }
+
+// -----------------------
 
 // function buildScheduleHtml_(){
 
