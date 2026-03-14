@@ -46,7 +46,7 @@ SpreadsheetApp.getUi()
 .addItem("Generate Certificates","sendCertificates")
 .addItem("Generate Program Booklet","generateProgramBooklet")
 .addItem("Generate Speaker Badges","generateAllBadges")
-
+.addItem("Generate Badge Sheets","generateBadgeSheets")
 .addToUi();
 
 }
