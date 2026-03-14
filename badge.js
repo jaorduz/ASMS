@@ -310,16 +310,12 @@ font-family:Arial;
 
 .page{
 width:289mm;
-height:200mm;
+height:202mm;
 display:grid;
 grid-template-columns:1fr 1fr;
 grid-template-rows:1fr 1fr;
-gap:0mm;
-break-inside:avoid;
-// page-break-after:always;
+gap:5mm;
 box-sizing:border-box;
-// width:100%;
-// height:100%;
 }
 
 .badge{
@@ -329,7 +325,7 @@ justify-content:center;
 align-items:center;
 
 width:100%;
-height:95mm;
+height:92mm;   /* KEY VALUE */
 
 border:1.5px solid #0f3d75;
 padding:3mm;
@@ -338,34 +334,6 @@ box-sizing:border-box;
 overflow:hidden;
 text-align:center;
 }
-
-.badge h2{
-margin:4mm 0 2mm 0;
-font-size:18pt;
-line-height:1.1;
-}
-
-.badge h3{
-margin:0;
-font-size:12pt;
-color:#0f3d75;
-}
-
-.badge .institution{
-font-size:10pt;
-color:#555;
-margin-bottom:2mm;
-}
-
-.badge .topic{
-font-size:9pt;
-margin-top:3mm;
-}
-
-.badge img{
-margin-top:4mm;
-}
-
 </style>
 
 </head>
@@ -373,6 +341,7 @@ margin-top:4mm;
 <body>
 
 ${pages}
+
 
 </body>
 
