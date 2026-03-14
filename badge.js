@@ -300,7 +300,7 @@ return `
 
 @page{
 size:A4 landscape;
-margin:4mm;
+margin:5mm;
 }
 
 body{
@@ -309,14 +309,16 @@ font-family:Arial;
 }
 
 .page{
-width:289mm;
-height:202mm;
+// width:289mm;
+// height:202mm;
 display:grid;
 grid-template-columns:1fr 1fr;
 grid-template-rows:1fr 1fr;
 gap:6mm;
 page-break-after:always;
 box-sizing:border-box;
+width:100%;
+height:100%;
 }
 
 .badge{
