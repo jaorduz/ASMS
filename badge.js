@@ -303,14 +303,19 @@ size:A4 landscape;
 margin:6mm;
 }
 
+body{
+margin:0;
+}
+
 .page{
-width:285mm;
-height:198mm;
+width:285mm;              /* 297 - 12 */
+height:198mm;             /* 210 - 12 */
 display:grid;
-grid-template-columns:1fr 1fr;
-grid-template-rows:1fr 1fr;
-gap:6mm;
+grid-template-columns:137.5mm 137.5mm;   /* (285 - 10) / 2 */
+grid-template-rows:94mm 94mm;            /* (198 - 10) / 2 */
+gap:10mm;
 page-break-after:always;
+box-sizing:border-box;
 }
 
 .badge{
@@ -318,11 +323,12 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-width:139mm;
-height:96mm;
+width:100%;
+height:100%;
 border:2px solid #0f3d75;
 padding:4mm;
 box-sizing:border-box;
+overflow:hidden;
 }
 
 </style>
