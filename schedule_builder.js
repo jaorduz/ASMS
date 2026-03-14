@@ -22,7 +22,7 @@ time:r.TimeStartTalk,
 title:r.TopicGral,
 speaker:r.speakerName+" "+r.speakerLastName,
 institution:r.institution || "",
-zoomLink:r.zoomLink || "",
+zoomLink: formatValue_(r["zoomLink"]),
 promo: formatValue_(r["PromotionalText"]),
 calendarId:r.__rowNumber
 
@@ -66,10 +66,12 @@ let html = `
 
 sessions.forEach(s=>{
 
+const zoomUrl = formatValue_(s.zoomLink);
+
 const zoom =
-s.zoomLink
-? `<a class="zoom-link" href="${s.zoomLink}" target="_blank">Join Session</a>`
-: "";
+zoomUrl
+? `<a class="zoom-link" href="${escapeAttribute_(zoomUrl)}" target="_blank" rel="noopener noreferrer">Join Session</a>`
+: `<span style="color:#999;">No link</span>`;
 
 html += `
 <tr>
