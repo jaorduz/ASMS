@@ -314,7 +314,7 @@ font-family:Arial;
 display:grid;
 grid-template-columns:1fr 1fr;
 grid-template-rows:1fr 1fr;
-gap:6mm;
+gap:2mm;
 page-break-after:always;
 box-sizing:border-box;
 width:100%;
@@ -327,7 +327,7 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 
-width:141.5mm;
+width:101.5mm;
 height:85mm;
 
 border:1.5px solid #0f3d75;
