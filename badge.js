@@ -311,11 +311,15 @@ margin-bottom:10mm;
 }
 
 .badge{
+display:flex;
+flex-direction:column;
+justify-content:center;
 width:145mm;
-height:95mm;
+height:75mm;
 border:2px solid #0f3d75;
 padding:8mm;
 box-sizing:border-box;
+align-items:center;
 }
 
 </style>
