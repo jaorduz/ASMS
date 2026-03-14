@@ -23,7 +23,8 @@ title:r.TopicGral,
 speaker:r.speakerName+" "+r.speakerLastName,
 institution:r.institution || "",
 zoomLink:r.zoomLink || "",
-promo: formatValue_(r["PromotionalText"])
+promo: formatValue_(r["PromotionalText"]),
+calendarId:r.__rowNumber
 
 };
 
@@ -63,8 +64,15 @@ sessions.forEach(s=>{
 
 const zoom =
 s.zoomLink
-? `<a class="zoom-link" href="${s.zoomLink}">Join Session</a>`
+? `<a class="zoom-link" href="${s.zoomLink}" target="_blank">Join</a>`
 : "";
+
+const calendar =
+`<a class="zoom-link"
+href="?calendar=${s.calendarId}"
+target="_blank">
+Add to Calendar
+</a>`;
 
 html += `
 <tr>
@@ -82,8 +90,11 @@ ${escapeHtml_(s.institution)}
 </span>
 </td>
 
-<td>${zoom}</td>
-
+<td>
+${zoom}
+<br>
+${calendar}
+</td>
 </tr>
 
 <tr>

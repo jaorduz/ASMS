@@ -336,7 +336,23 @@ ${speakers}
 /**
  * Entry point for deployed website
  */
-function doGet(){
+function doGet(e){
+
+if(e && e.parameter.calendar){
+
+const row = parseInt(e.parameter.calendar);
+
+const {records} = getData_();
+
+const record = records.find(r => r.__rowNumber === row);
+
+const ics = buildIcsBlob_(record);
+
+return ContentService
+.createTextOutput(ics.getDataAsString())
+.setMimeType(ContentService.MimeType.ICAL);
+
+}
 
 return HtmlService
 .createHtmlOutput(buildConferenceWebsite_())
