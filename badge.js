@@ -300,16 +300,16 @@ return `
 
 @page{
 size:A4 landscape;
-margin:8mm;
+margin:6mm;
 }
 
 .page{
-width:277mm;
-height:190mm;
+width:285mm;
+height:198mm;
 display:grid;
 grid-template-columns:1fr 1fr;
 grid-template-rows:1fr 1fr;
-gap:10mm;
+gap:6mm;
 page-break-after:always;
 }
 
@@ -317,12 +317,12 @@ page-break-after:always;
 display:flex;
 flex-direction:column;
 justify-content:center;
-width:145mm;
-height:85mm;
-border:2px solid #0f3d75;
-padding:8mm;
-box-sizing:border-box;
 align-items:center;
+width:139mm;
+height:96mm;
+border:2px solid #0f3d75;
+padding:4mm;
+box-sizing:border-box;
 }
 
 </style>
