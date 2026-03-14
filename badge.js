@@ -314,7 +314,7 @@ height:202mm;
 display:grid;
 grid-template-columns:1fr 1fr;
 grid-template-rows:1fr 1fr;
-gap:5mm;
+gap:1mm;
 box-sizing:border-box;
 }
 
@@ -340,6 +340,7 @@ text-align:center;
 
 <body>
 
+${pages}
 ${pages}
 
 
