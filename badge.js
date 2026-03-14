@@ -1,23 +1,12 @@
 // -----------------------------------------------------
-// ASMS - Advanced System for Meetings Support
-// Conference automation platform
-// Author: Javier Orduz
-
-// ASMS Version: 1.0
-// Maintainer: Dr. Javier Orduz
-// Institution: UNAM – FES Acatlán
-// -----------------------------------------------------
-
-// -----------------------------------------------------
 // BADGE GENERATOR
-// Creates speaker badges with QR codes
+// Creates speaker badges as PDF with optional QR
 // -----------------------------------------------------
 
 function generateBadge(record){
 
 const name =
-formatValue_(record.speakerName) +
-" " +
+formatValue_(record.speakerName) + " " +
 formatValue_(record.speakerLastName);
 
 const institution =
@@ -25,20 +14,30 @@ formatValue_(record.institution || "");
 
 
 // ---------------------------------------------
-// Determine social link for QR code
+// Determine link for QR
+// priority: speaker website → LinkedIn → none
 // ---------------------------------------------
-const social =
-record.speakerLinkedin ||
+const link =
 record.speakerWebsite ||
-CONFIG.ORGANIZER.meeting;
+record.speakerLinkedin ||
+"";
 
+let qrHtml = "";
 
-// ---------------------------------------------
-// QR code generator
-// ---------------------------------------------
+if(link){
+
 const qr =
 "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" +
-encodeURIComponent(social);
+encodeURIComponent(link);
+
+qrHtml = `
+<img src="${qr}" width="110" style="margin-top:12px">
+<div style="font-size:11px;color:#666;margin-top:4px">
+Scan for profile
+</div>
+`;
+
+}
 
 
 // ---------------------------------------------
@@ -47,38 +46,50 @@ encodeURIComponent(social);
 const html = `
 <!DOCTYPE html>
 <html>
+<head>
+<meta charset="UTF-8">
+</head>
 
 <body style="
 font-family:Arial;
-background:#f4f6f8;
-padding:20px">
+background:#ffffff;
+padding:10px">
 
 <div style="
-width:320px;
-margin:auto;
+width:300px;
 border:3px solid #0f3d75;
 border-radius:12px;
 padding:20px;
-background:white;
 text-align:center">
 
-<h3 style="margin-top:0;color:#0f3d75">
+<h3 style="
+margin-top:0;
+color:#0f3d75">
 ${CONFIG.EVENT.name}
 </h3>
 
-<img src="${qr}" width="120" style="margin:10px 0">
-
-<h2 style="margin:10px 0">
+<h2 style="
+margin:12px 0 6px 0;
+font-size:22px">
 ${escapeHtml_(name)}
 </h2>
 
-<div style="font-size:14px;color:#555;margin-bottom:6px">
+${institution ? `
+<div style="
+font-size:14px;
+color:#444;
+margin-bottom:10px">
 ${escapeHtml_(institution)}
 </div>
+` : ""}
 
-<p style="font-size:14px;margin-top:8px">
+<div style="
+font-size:13px;
+color:#666">
 Speaker
-</p>
+</div>
+
+${qrHtml}
 
 </div>
 
@@ -88,7 +99,7 @@ Speaker
 
 
 // ---------------------------------------------
-// Save badge inside event folder
+// Locate event folder
 // ---------------------------------------------
 const eventFolder = getEventFolder_();
 
@@ -102,13 +113,26 @@ badgesFolder = folders.next();
 badgesFolder = eventFolder.createFolder("badges");
 }
 
+
+// ---------------------------------------------
+// Create PDF badge
+// ---------------------------------------------
 const filename =
-"badge_" + sanitizeFilename_(name) + ".html";
+"badge_" + sanitizeFilename_(name) + ".pdf";
+
+const htmlOutput = HtmlService.createHtmlOutput(html);
+
+const blob =
+Utilities.newBlob(
+htmlOutput.getContent(),
+"text/html",
+filename
+).getAs("application/pdf");
 
 const file =
-badgesFolder.createFile(
-Utilities.newBlob(html,"text/html",filename)
-);
+badgesFolder.createFile(blob);
+
+file.setName(filename);
 
 return file;
 
