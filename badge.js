@@ -327,8 +327,8 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 
-width:101.5mm;
-height:85mm;
+width:141.5mm;
+height:55mm;
 
 border:1.5px solid #0f3d75;
 padding:3mm;
