@@ -23,7 +23,7 @@ title:r.TopicGral,
 speaker:r.speakerName+" "+r.speakerLastName,
 institution:r.institution || "",
 zoomLink:r.zoomLink || "",
-promo:formatValue_(r.PromotionalText)
+promo: formatValue_(r["PromotionalText"])
 
 };
 
@@ -87,15 +87,22 @@ ${escapeHtml_(s.institution)}
 </tr>
 
 <tr>
-${s.promo ? `
-<tr>
-<td colspan="4" class="session-description">
+
+<td colspan="4" style="
+background:#f7f9fc;
+padding:14px;
+font-size:14px;
+line-height:1.6;
+border-left:4px solid #0f3d75;
+">
+
 ${escapeHtml_(s.promo)}
+
 </td>
-</tr>
-` : ``}
+
 </tr>
 `;
+
 });
 
 html += "</table>";
