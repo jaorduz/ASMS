@@ -300,19 +300,20 @@ return `
 
 @page{
 size:A4 landscape;
-margin:3mm;
+margin:4mm;
 }
 
 body{
 margin:0;
+font-family:Arial;
 }
 
 .page{
-width:285mm;              /* 297 - 12 */
-height:198mm;             /* 210 - 12 */
+width:289mm;
+height:202mm;
 display:grid;
-grid-template-columns:137.5mm 137.5mm;   /* (285 - 10) / 2 */
-grid-template-rows:94mm 94mm;            /* (198 - 10) / 2 */
+grid-template-columns:1fr 1fr;
+grid-template-rows:1fr 1fr;
 gap:6mm;
 page-break-after:always;
 box-sizing:border-box;
@@ -323,12 +324,43 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-width:100%;
-height:100%;
-border:2px solid #0f3d75;
-padding:4mm;
+
+width:141.5mm;
+height:98mm;
+
+border:1.5px solid #0f3d75;
+padding:3mm;
+
 box-sizing:border-box;
 overflow:hidden;
+text-align:center;
+}
+
+.badge h2{
+margin:4mm 0 2mm 0;
+font-size:18pt;
+line-height:1.1;
+}
+
+.badge h3{
+margin:0;
+font-size:12pt;
+color:#0f3d75;
+}
+
+.badge .institution{
+font-size:10pt;
+color:#555;
+margin-bottom:2mm;
+}
+
+.badge .topic{
+font-size:9pt;
+margin-top:3mm;
+}
+
+.badge img{
+margin-top:4mm;
 }
 
 </style>
