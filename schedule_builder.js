@@ -87,16 +87,8 @@ ${escapeHtml_(s.institution)}
 </tr>
 
 <tr>
-<td colspan="4" style="
-padding:14px;
-background:#fafafa;
-font-size:14px;
-line-height:1.6;
-color:#333;
-">
-
+<td colspan="4" class="session-description">
 ${escapeHtml_(s.promo)}
-
 </td>
 </tr>
 `;
