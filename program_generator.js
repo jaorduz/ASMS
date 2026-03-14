@@ -21,6 +21,8 @@ function generateProgramBooklet(){
 
 const schedule = buildScheduleHtml_();
 
+Logger.log(schedule);
+
 const html = `
 <!DOCTYPE html>
 <html>
@@ -100,6 +102,7 @@ ${schedule}
 /* -------------------------------------------------
 GET EVENT FOLDER
 ------------------------------------------------- */
+Utilities.sleep(1000);
 
 const eventFolder = getEventFolder_();
 
@@ -134,6 +137,8 @@ const htmlFile = programFolder.createFile(htmlBlob);
 /* -------------------------------------------------
 CONVERT TO PDF
 ------------------------------------------------- */
+
+Utilities.sleep(1500);
 
 const pdfBlob = htmlFile.getBlob().getAs(MimeType.PDF);
 
