@@ -22,7 +22,8 @@ time:r.TimeStartTalk,
 title:r.TopicGral,
 speaker:r.speakerName+" "+r.speakerLastName,
 institution:r.institution || "",
-zoomLink:r.zoomLink || ""
+zoomLink:r.zoomLink || "",
+promo:r.PromotionalText || ""
 
 };
 
@@ -81,13 +82,24 @@ ${escapeHtml_(s.institution)}
 </span>
 </td>
 
-<td>
-${zoom}
-</td>
+<td>${zoom}</td>
 
 </tr>
-`;
 
+<tr>
+<td colspan="4" style="
+padding:14px;
+background:#fafafa;
+font-size:14px;
+line-height:1.6;
+color:#333;
+">
+
+${escapeHtml_(s.promo)}
+
+</td>
+</tr>
+`;
 });
 
 html += "</table>";

@@ -75,6 +75,13 @@ text-decoration:none;
 font-weight:bold;
 }
 
+.session-description{
+background:#fafafa;
+padding:14px;
+font-size:14px;
+line-height:1.6;
+}
+
 </style>
 </head>
 
