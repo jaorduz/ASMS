@@ -38,8 +38,7 @@ const CONFIG = {
     confirmation: "https://docs.google.com/forms/d/1xt8K6_6QFShpiUYi4CYpnyzJ971BSvUhQf05ttdEhAI/viewform"
   },
 
-  TIMEZONE: "America/Mexico_City"
-
+  TIMEZONE: "America/Mexico_City",
 
 SPONSORS : [
   {
