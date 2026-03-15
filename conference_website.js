@@ -118,6 +118,8 @@ const sponsorLogosHtml = (CONFIG.SPONSORS || []).map(s => `
     <img src="${s.logo}" alt="${s.name}" style="height:60px;max-width:160px;object-fit:contain;background:white;padding:6px;border-radius:8px;">
   </a>
 `).join("");
+
+
 /*====================*/
 /*====================*/
 
@@ -156,13 +158,6 @@ calendarFile = programFolder.createFile(calendarBlob)
 const calendarUrl = calendarFile.getUrl();
 
 /*====================*/
-
-const sponsorLogosHtml = (CONFIG.SPONSORS || []).map(s => `
-  <a href="${s.url}" target="_blank" style="display:inline-block;margin:10px 16px;">
-    <img src="${s.logo}" alt="${s.name}" style="height:60px;max-width:160px;object-fit:contain;background:white;padding:6px;border-radius:8px;">
-  </a>
-`).join("");
-
 /*====================*/
 
 return `
