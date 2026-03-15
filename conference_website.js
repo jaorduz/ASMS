@@ -412,7 +412,6 @@ ${speakers}
 </div>
 
 
-// This is to HTML. JO ADD
 
 <div class="footer">
   <h3>Partners and Sponsors</h3>
