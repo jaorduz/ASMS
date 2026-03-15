@@ -39,4 +39,24 @@ const CONFIG = {
   },
 
   TIMEZONE: "America/Mexico_City"
+
+
+SPONSORS : [
+  {
+    name : "FES Acatlán",
+    url  : "https://www.acatlan.unam.mx/",
+    logo : "https://www.acatlan.unam.mx/img/logo_fesa.png"
+  },
+  {
+    name : "QMexico",
+    url  : "https://qmexico.org",
+    logo : "https://qmexico.org/wp-content/uploads/2020/10/cropped-logo-long-7.png"
+  },
+  {
+    name : "Qaldas",
+    url  : "https://qaldas.com",
+    logo : "https://lh3.googleusercontent.com/d/1pCWBRmvRGgBtdE7P9ocnykTh2um4zLfe"
+  }
+]
+
 };

@@ -113,7 +113,11 @@ function buildConferenceWebsite_(){
 const schedule = buildScheduleHtml_();
 const speakers = buildSpeakerCards_();
 
-
+const sponsorLogosHtml = (CONFIG.SPONSORS || []).map(s => `
+  <a href="${s.url}" target="_blank" style="display:inline-block;margin:10px 16px;">
+    <img src="${s.logo}" alt="${s.name}" style="height:60px;max-width:160px;object-fit:contain;background:white;padding:6px;border-radius:8px;">
+  </a>
+`).join("");
 /*====================*/
 /*====================*/
 
@@ -152,6 +156,13 @@ calendarFile = programFolder.createFile(calendarBlob)
 const calendarUrl = calendarFile.getUrl();
 
 /*====================*/
+
+const sponsorLogosHtml = (CONFIG.SPONSORS || []).map(s => `
+  <a href="${s.url}" target="_blank" style="display:inline-block;margin:10px 16px;">
+    <img src="${s.logo}" alt="${s.name}" style="height:60px;max-width:160px;object-fit:contain;background:white;padding:6px;border-radius:8px;">
+  </a>
+`).join("");
+
 /*====================*/
 
 return `
@@ -311,9 +322,33 @@ font-size:14px;
 line-height:1.6;
 }
 
+
+.footer{
+background:#0f3d75;
+color:white;
+padding:30px 20px;
+text-align:center;
+margin-top:50px;
+}
+
+.footer h3{
+margin-top:0;
+margin-bottom:16px;
+font-size:20px;
+}
+
+.footer-logos{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+align-items:center;
+gap:16px;
+}
+
 </style>
 
 </head>
+
 
 <body>
 
@@ -381,7 +416,18 @@ ${speakers}
 
 </div>
 
+
+// This is to HTML. JO ADD
+
+<div class="footer">
+  <h3>Partners and Sponsors</h3>
+  <div class="footer-logos">
+    ${sponsorLogosHtml}
+  </div>
+</div>
+
 </body>
+
 
 </html>
 

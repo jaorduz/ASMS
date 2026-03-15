@@ -50,6 +50,11 @@ const folderId = extractGoogleId_(folderURL);
 
 const folder = DriveApp.getFolderById(folderId);
 
+const subfolders = createASMSSubfolders_(folder);
+/* ---------------------------------
+const subfolders = createASMSSubfolders_(folder);
+--------------------------------- */
+
 
 /* ---------------------------------
 CREATE SPREADSHEET
@@ -106,7 +111,8 @@ formURL,
 letterTemplateURL,
 spreadsheetId: spreadsheet.getId(),
 formId: form.getId(),
-folderId: folder.getId()
+folderId: folder.getId(),
+sponsorLogosFolderId: subfolders["SponsorLogos"]
 
 };
 
@@ -208,6 +214,39 @@ return spreadsheet;
 }
 
 
+
+/** ==============*/
+function createASMSSubfolders_(eventFolder){
+
+  const names = [
+    "badges",
+    "certificates",
+    "program",
+    "website",
+    "SponsorLogos"
+  ];
+
+  const ids = {};
+
+  names.forEach(name => {
+    const existing = eventFolder.getFoldersByName(name);
+    let folder;
+
+    if(existing.hasNext()){
+      folder = existing.next();
+    }else{
+      folder = eventFolder.createFolder(name);
+    }
+
+    ids[name] = folder.getId();
+  });
+
+  return ids;
+}
+
+/** ==============*/
+
+
 /* ============== */
 
 function saveASMSProperties_(config){
@@ -238,6 +277,12 @@ config.folderId
 props.setProperty(
 "ASMS_EVENT_LETTER_TEMPLATE_ID",
 extractGoogleId_(config.letterTemplateURL)
+);
+
+
+props.setProperty(
+"ASMS_EVENT_SPONSOR_LOGOS_FOLDER_ID",
+config.sponsorLogosFolderId || ""
 );
 
 }
