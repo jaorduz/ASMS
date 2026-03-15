@@ -44,7 +44,7 @@ SPONSORS : [
   {
     name : "FES Acatlán",
     url  : "https://www.acatlan.unam.mx/",
-    logo : "https://www.acatlan.unam.mx/img/logo_fesa.png"
+    logo : "https://lh3.googleusercontent.com/d/1_8iTeu8X7x7a-X15y7oftFLF8yrnNrCF"
   },
   {
     name : "QMexico",
