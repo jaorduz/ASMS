@@ -115,6 +115,8 @@ const speakers = buildSpeakerCards_();
 
 
 /*====================*/
+/*====================*/
+
 const eventFolder = getEventFolder_();
 
 let programFolder;
@@ -127,11 +129,29 @@ programFolder = folders.next();
 programFolder = eventFolder.createFolder("program");
 }
 
+
+/* check if calendar already exists */
+
+let calendarFile;
+
+const existing = programFolder.getFilesByName("conference_schedule.ics");
+
+if(existing.hasNext()){
+
+calendarFile = existing.next();
+
+}else{
+
 const calendarBlob = generateConferenceCalendar_();
 
-const calendarFile = programFolder.createFile(calendarBlob);
+calendarFile = programFolder.createFile(calendarBlob)
+.setName("conference_schedule.ics");
+
+}
 
 const calendarUrl = calendarFile.getUrl();
+
+/*====================*/
 /*====================*/
 
 return `
@@ -324,6 +344,10 @@ line-height:1.6;
 <div class="container">
 
 <h2>Program</h2>
+
+<strong>Calendar Download</strong><br>
+You can download the full conference schedule and add it to your calendar.
+
 
 <p style="
 margin-bottom:20px;
