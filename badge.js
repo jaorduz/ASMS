@@ -117,18 +117,18 @@ return file;
 /**
  * Generate printable A4 sheets (2 badges per page)
  */
-// function generateBadgeSheets(){
+function generateBadgeSheets(){
 
-// const {records} = getData_();
+const {records} = getData_();
 
-// const confirmed = records.filter(r =>
-// normalizeConfirmationStatus_(r.confirmationStatus) == "Confirmed"
-// );
+const confirmed = records.filter(r =>
+normalizeConfirmationStatus_(r.confirmationStatus) == "Confirmed"
+);
 
-// if(!confirmed.length){
-// SpreadsheetApp.getUi().alert("No confirmed speakers.");
-// return;
-// }
+if(!confirmed.length){
+SpreadsheetApp.getUi().alert("No confirmed speakers.");
+return;
+}
 
 // let pages = "";
 
@@ -171,31 +171,14 @@ return file;
 
 // pages += backPages;
 
-
 let pages = "";
 
 for(let i=0;i<confirmed.length;i+=4){
 
-// ---------- FRONT ----------
-const f1 = confirmed[i]   ? buildBadgeFront_(confirmed[i])   : "";
-const f2 = confirmed[i+1] ? buildBadgeFront_(confirmed[i+1]) : "";
-const f3 = confirmed[i+2] ? buildBadgeFront_(confirmed[i+2]) : "";
-const f4 = confirmed[i+3] ? buildBadgeFront_(confirmed[i+3]) : "";
-
-pages += `
-<div class="page">
-  <div class="badge">${f1}</div>
-  <div class="badge">${f2}</div>
-  <div class="badge">${f3}</div>
-  <div class="badge">${f4}</div>
-</div>
-`;
-
-// ---------- BACK (reverse for printing alignment) ----------
-const b1 = confirmed[i+3] ? buildBadgeBack_(confirmed[i+3]) : "";
-const b2 = confirmed[i+2] ? buildBadgeBack_(confirmed[i+2]) : "";
-const b3 = confirmed[i+1] ? buildBadgeBack_(confirmed[i+1]) : "";
-const b4 = confirmed[i]   ? buildBadgeBack_(confirmed[i])   : "";
+const b1 = confirmed[i]   ? buildBadgeFront_(confirmed[i])   : "";
+const b2 = confirmed[i+1] ? buildBadgeFront_(confirmed[i+1]) : "";
+const b3 = confirmed[i+2] ? buildBadgeFront_(confirmed[i+2]) : "";
+const b4 = confirmed[i+3] ? buildBadgeFront_(confirmed[i+3]) : "";
 
 pages += `
 <div class="page">
@@ -205,9 +188,29 @@ pages += `
   <div class="badge">${b4}</div>
 </div>
 `;
-
 }
 
+/*======*/
+let backPages = "";
+
+for(let i=0;i<confirmed.length;i+=4){
+
+const b1 = confirmed[i]   ? buildBadgeBack_(confirmed[i])   : "";
+const b2 = confirmed[i+1] ? buildBadgeBack_(confirmed[i+1]) : "";
+const b3 = confirmed[i+2] ? buildBadgeBack_(confirmed[i+2]) : "";
+const b4 = confirmed[i+3] ? buildBadgeBack_(confirmed[i+3]) : "";
+
+backPages += `
+<div class="page">
+  <div class="badge">${b1}</div>
+  <div class="badge">${b2}</div>
+  <div class="badge">${b3}</div>
+  <div class="badge">${b4}</div>
+</div>
+`;
+}
+
+pages += backPages;
 
 /*============================*/
 
