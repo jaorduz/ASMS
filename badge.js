@@ -207,6 +207,8 @@ pages += `
 `;
 
 }
+
+
 /*============================*/
 
 const html = buildBadgeDocument_(pages);
