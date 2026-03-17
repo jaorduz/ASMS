@@ -341,13 +341,12 @@ font-family:Arial;
 }
 
 .page{
-width:289mm;
-height:202mm;
 display:grid;
 grid-template-columns:1fr 1fr;
 grid-template-rows:1fr 1fr;
 gap:5mm;
-box-sizing:border-box;
+width:100%;
+height:100%;
 page-break-after:always;
 }
 
@@ -357,11 +356,10 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 width:100%;
-height:100%;
+height:95mm;   /* key fix */
 border:1.5px solid #0f3d75;
-padding:3mm;
+padding:4mm;
 box-sizing:border-box;
-overflow:hidden;
 text-align:center;
 }
 
