@@ -1,5 +1,5 @@
 git add .
-git commit -m "Add active event selector"
+git commit -m "Fix the badges number"
 git push
 
 clasp push
