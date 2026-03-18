@@ -114,3 +114,103 @@ letter.createChoice("No")
 return form;
 
 }
+
+/*=====================*/
+
+function createApplicationForm_(eventName, language, eventFolder){
+
+/* -------------------------------------------------
+CREATE FOLDERS
+------------------------------------------------- */
+
+let applicationsFolder;
+let uploadsFolder;
+
+/* applications folder */
+const folders = eventFolder.getFoldersByName("applications");
+
+if(folders.hasNext()){
+  applicationsFolder = folders.next();
+}else{
+  applicationsFolder = eventFolder.createFolder("applications");
+}
+
+/* uploads folder */
+const uploadFolders = applicationsFolder.getFoldersByName("uploads");
+
+if(uploadFolders.hasNext()){
+  uploadsFolder = uploadFolders.next();
+}else{
+  uploadsFolder = applicationsFolder.createFolder("uploads");
+}
+
+/* -------------------------------------------------
+CREATE FORM
+------------------------------------------------- */
+
+const form = FormApp.create(
+eventName + " – Application Form"
+);
+
+/* Move form to applications folder */
+const formFile = DriveApp.getFileById(form.getId());
+applicationsFolder.addFile(formFile);
+DriveApp.getRootFolder().removeFile(formFile);
+
+/* Description */
+form.setDescription(
+language === "ES"
+? "Formulario de aplicación al programa."
+: "Application form for the program."
+);
+
+/* -------------------------------------------------
+FIELDS
+------------------------------------------------- */
+
+/* Name */
+form.addTextItem()
+.setTitle("Name")
+.setRequired(true);
+
+/* Last Name */
+form.addTextItem()
+.setTitle("Last Name")
+.setRequired(true);
+
+/* Email */
+form.addTextItem()
+.setTitle("Institutional Email")
+.setRequired(true);
+
+/* Job Position */
+const job = form.addMultipleChoiceItem();
+
+job.setTitle("Job Position")
+.setChoices([
+job.createChoice("Professor"),
+job.createChoice("Researcher"),
+job.createChoice("Posdoct"),
+job.createChoice("Student"),
+job.createChoice("Other")
+])
+.setRequired(true);
+
+/* File Upload */
+form.addFileUploadItem()
+.setTitle("Upload Application Letter (PDF)")
+.setRequired(true)
+.setHelpText("Please upload a PDF file.")
+.setAllowOnlySpecificFileTypes(true)
+.setAllowedFileTypes([FormApp.FileType.PDF]);
+
+/* -------------------------------------------------
+RETURN OBJECT
+------------------------------------------------- */
+
+return {
+  form,
+  uploadsFolder
+};
+
+}

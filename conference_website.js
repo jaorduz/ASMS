@@ -373,6 +373,27 @@ gap:16px;
 </div>
 
 
+<!-- Application -->
+
+<p style="text-align:center;margin:20px 0;">
+
+<a href="${PropertiesService.getScriptProperties().getProperty("ASMS_EVENT_APPLICATION_FORM_URL")}"
+target="_blank"
+style="
+background:#2c7be5;
+color:white;
+padding:14px 22px;
+border-radius:8px;
+text-decoration:none;
+font-weight:bold;
+font-size:16px;
+">
+Click to apply!
+</a>
+
+</p>
+
+
 <!-- CONTENT -->
 
 <div class="container">

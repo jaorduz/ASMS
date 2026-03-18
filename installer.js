@@ -72,8 +72,28 @@ DriveApp.getRootFolder().removeFile(spreadsheetFile);
 
 
 /* ---------------------------------
-CREATE CONFIRMATION FORM
+CREATE APPLICATION FORM
 --------------------------------- */
+
+const applicationData = createApplicationForm_(
+  eventName,
+  language,
+  folder
+);
+
+const applicationForm = applicationData.form;
+const uploadsFolder = applicationData.uploadsFolder;
+
+/* Move application form */
+const appFormFile = DriveApp.getFileById(applicationForm.getId())
+.setName(eventName + " — Application Form");
+
+folder.addFile(appFormFile);
+DriveApp.getRootFolder().removeFile(appFormFile);
+
+/* Get URL */
+const applicationFormURL = applicationForm.getPublishedUrl();
+/*============*/
 
 const form = createConfirmationForm_(eventName, language);
 
@@ -94,6 +114,9 @@ FormApp.DestinationType.SPREADSHEET,
 spreadsheet.getId()
 );
 
+
+
+
 /* ---------------------------------
 GET FORM URL
 --------------------------------- */
@@ -112,7 +135,12 @@ letterTemplateURL,
 spreadsheetId: spreadsheet.getId(),
 formId: form.getId(),
 folderId: folder.getId(),
-sponsorLogosFolderId: subfolders["SponsorLogos"]
+sponsorLogosFolderId: subfolders["SponsorLogos"],
+
+/* ✅ NEW */
+applicationFormId: applicationForm.getId(),
+applicationFormURL: applicationFormURL,
+applicationUploadFolderId: uploadsFolder.getId()
 
 };
 
@@ -218,13 +246,14 @@ return spreadsheet;
 /** ==============*/
 function createASMSSubfolders_(eventFolder){
 
-  const names = [
-    "badges",
-    "certificates",
-    "program",
-    "website",
-    "SponsorLogos"
-  ];
+const names = [
+  "badges",
+  "certificates",
+  "program",
+  "website",
+  "SponsorLogos",
+  "applications"   // ✅ NEW
+];
 
   const ids = {};
 
@@ -283,6 +312,22 @@ extractGoogleId_(config.letterTemplateURL)
 props.setProperty(
 "ASMS_EVENT_SPONSOR_LOGOS_FOLDER_ID",
 config.sponsorLogosFolderId || ""
+);
+
+/*=========*/
+props.setProperty(
+"ASMS_EVENT_APPLICATION_FORM_ID",
+config.applicationFormId || ""
+);
+
+props.setProperty(
+"ASMS_EVENT_APPLICATION_FORM_URL",
+config.applicationFormURL || ""
+);
+
+props.setProperty(
+"ASMS_EVENT_APPLICATION_UPLOAD_FOLDER_ID",
+config.applicationUploadFolderId || ""
 );
 
 }
