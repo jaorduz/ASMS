@@ -113,16 +113,8 @@ function buildConferenceWebsite_(){
 const schedule = buildScheduleHtml_();
 const speakers = buildSpeakerCards_();
 
-const sponsorLogosHtml = (CONFIG.SPONSORS || []).map(s => `
-  <a href="${s.url}" target="_blank" style="display:inline-block;margin:10px 16px;">
-    <img src="${s.logo}" alt="${s.name}" style="height:60px;max-width:160px;object-fit:contain;background:white;padding:6px;border-radius:8px;">
-  </a>
-`).join("");
-
 
 /*====================*/
-/*====================*/
-
 const eventFolder = getEventFolder_();
 
 let programFolder;
@@ -135,29 +127,11 @@ programFolder = folders.next();
 programFolder = eventFolder.createFolder("program");
 }
 
-
-/* check if calendar already exists */
-
-let calendarFile;
-
-const existing = programFolder.getFilesByName("conference_schedule.ics");
-
-if(existing.hasNext()){
-
-calendarFile = existing.next();
-
-}else{
-
 const calendarBlob = generateConferenceCalendar_();
 
-calendarFile = programFolder.createFile(calendarBlob)
-.setName("conference_schedule.ics");
-
-}
+const calendarFile = programFolder.createFile(calendarBlob);
 
 const calendarUrl = calendarFile.getUrl();
-
-/*====================*/
 /*====================*/
 
 return `
@@ -276,7 +250,6 @@ font-weight:bold;
 
 .zoom-link:hover{
 background:#1a5ed9;
-text-decoration:underline;
 }
 /* Speaker grid */
 
@@ -317,33 +290,9 @@ font-size:14px;
 line-height:1.6;
 }
 
-
-.footer{
-background:#0f3d75;
-color:white;
-padding:30px 20px;
-text-align:center;
-margin-top:50px;
-}
-
-.footer h3{
-margin-top:0;
-margin-bottom:16px;
-font-size:20px;
-}
-
-.footer-logos{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-align-items:center;
-gap:16px;
-}
-
 </style>
 
 </head>
-
 
 <body>
 
@@ -374,10 +323,6 @@ gap:16px;
 <div class="container">
 
 <h2>Program</h2>
-
-<strong>Calendar Download</strong><br>
-You can download the full conference schedule and add it to your calendar.
-
 
 <p style="
 margin-bottom:20px;
@@ -411,17 +356,7 @@ ${speakers}
 
 </div>
 
-
-
-<div class="footer">
-  <h3>Partners and Sponsors</h3>
-  <div class="footer-logos">
-    ${sponsorLogosHtml}
-  </div>
-</div>
-
 </body>
-
 
 </html>
 
