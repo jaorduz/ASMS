@@ -11,13 +11,11 @@
 // -----------------------
 // Update information here
 // -----------------------
-const ASMS_VERSION = "1.0.0";
+const ASMS_VERSION = "1.1.0";
 
 const CONFIG = {
   SPREADSHEET_ID: "1jnctNn12vFfgRjlpRe-r0xh_CbzW33s4TJgIibBMuso",
 
-  // Use "test" while checking the workflow.
-  // Change to "production" when ready to send real emails.
   SHEET_NAME: "production",
 
   EVENT: {
@@ -40,32 +38,32 @@ const CONFIG = {
 
   TIMEZONE: "America/Mexico_City",
 
-SPONSORS : [
-  {
-    name : "FES Acatlán",
-    url  : "https://www.acatlan.unam.mx/",
-    logo : "https://lh3.googleusercontent.com/d/1-NAsOiyrFVGa1eKv5hTacHdVT7R49SZ-"
-  },
-  {
-    name : "QMexico",
-    url  : "https://qmexico.org",
-    logo : "https://qmexico.org/wp-content/uploads/2020/10/cropped-logo-long-7.png"
-  },
-  {
-    name : "Qaldas",
-    url  : "https://qaldas.com",
-    logo : "https://lh3.googleusercontent.com/d/1pCWBRmvRGgBtdE7P9ocnykTh2um4zLfe"
+  SPONSORS : [
+    {
+      name : "FES Acatlán",
+      url  : "https://www.acatlan.unam.mx/",
+      logo : "https://lh3.googleusercontent.com/d/1-NAsOiyrFVGa1eKv5hTacHdVT7R49SZ-"
+    },
+    {
+      name : "QMexico",
+      url  : "https://qmexico.org",
+      logo : "https://qmexico.org/wp-content/uploads/2020/10/cropped-logo-long-7.png"
+    },
+    {
+      name : "Qaldas",
+      url  : "https://qaldas.com",
+      logo : "https://lh3.googleusercontent.com/d/1pCWBRmvRGgBtdE7P9ocnykTh2um4zLfe"
+    }
+  ],
+
+  /* ✅ FIXED LOCATION */
+  SESSION_STRUCTURE: {
+    enabled: true,
+    parts: [
+      { label: "Introductory Phase", duration: 30 },
+      { label: "International Speaker Session", duration: 60 },
+      { label: "Guided Discussion and Product Development", duration: 30 }
+    ]
   }
-]
 
 };
-
-/*======*/
-SESSION_STRUCTURE: {
-  enabled: true, // turn OFF for other events
-  parts: [
-    { label: "Introductory Phase", duration: 30 },
-    { label: "International Speaker Session", duration: 60 },
-    { label: "Guided Discussion and Product Development", duration: 30 }
-  ]
-}
