@@ -50,7 +50,7 @@ const topic =
 escapeHtml_(formatValue_(getField_(r,"TopicGral")));
 
 const promo =
-escapeHtml_(formatValue_(getField_(r,"instituPromotionalTexttion")))
+escapeHtml_(formatValue_(getField_(r,"PromotionalText")));
 
 const bio = 
 escapeHtml_(formatValue_(getField_(r,"speakerBio")));
@@ -125,43 +125,10 @@ const sponsorLogosHtml = (CONFIG.SPONSORS || []).map(s => `
 
 
 /*====================*/
-/*====================*/
 
-const eventFolder = getEventFolder_();
+const calendarUrl =
+ScriptApp.getService().getUrl() + "?calendar=full";
 
-let programFolder;
-
-const folders = eventFolder.getFoldersByName("program");
-
-if (folders.hasNext()){
-programFolder = folders.next();
-}else{
-programFolder = eventFolder.createFolder("program");
-}
-
-
-/* check if calendar already exists */
-
-let calendarFile;
-
-const existing = programFolder.getFilesByName("conference_schedule.ics");
-
-if(existing.hasNext()){
-
-calendarFile = existing.next();
-
-}else{
-
-const calendarBlob = generateConferenceCalendar_();
-
-calendarFile = programFolder.createFile(calendarBlob)
-.setName("conference_schedule.ics");
-
-}
-
-const calendarUrl = calendarFile.getUrl();
-
-/*====================*/
 /*====================*/
 
 return `
@@ -463,6 +430,18 @@ function doGet(e){
 
 if(e && e.parameter.calendar){
 
+/* FULL CONFERENCE CALENDAR */
+if(e.parameter.calendar === "full"){
+
+const blob = generateConferenceCalendar_();
+
+return ContentService
+.createTextOutput(blob.getDataAsString())
+.setMimeType(ContentService.MimeType.ICAL);
+
+}
+
+/* SINGLE SESSION */
 const row = parseInt(e.parameter.calendar);
 
 const {records} = getData_();
