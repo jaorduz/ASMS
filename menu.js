@@ -22,12 +22,8 @@ SpreadsheetApp.getUi()
 .addItem("Clone Event","cloneASMSEvent")
 
 .addSeparator()
-.addItem("Setup Application Form","setupApplicationFormForActiveEvent_")
-
-
-.addSeparator()
-.addItem("Check Missing Columns","showMissingColumnsReport")
-.addItem("Add Missing Columns","addMissingColumns_")
+.addItem("System Diagnostics","runSystemDiagnostics")
+.addItem("System Summary","showSystemSummary")
 
 .addSeparator()
 
@@ -40,7 +36,9 @@ SpreadsheetApp.getUi()
 .addItem("Send 7-Day Talk Reminders","sendTalkReminders7DaysManual")
 
 .addSeparator()
+
 .addItem("Preview Speaker Webpage","previewSpeakerWebpage")
+
 .addItem("Preview Full Conference Website","previewConferenceWebsite")
 
 .addSeparator()
@@ -49,15 +47,6 @@ SpreadsheetApp.getUi()
 .addItem("Generate Program Booklet","generateProgramBooklet")
 .addItem("Generate Speaker Badges","generateAllBadges")
 .addItem("Generate Badge Sheets","generateBadgeSheets")
-
-
-
-.addSeparator()
-.addItem("System Diagnostics","runSystemDiagnostics")
-.addItem("System Summary","showSystemSummary")
-
-
-
 .addToUi();
 
 }

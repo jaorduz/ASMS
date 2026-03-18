@@ -47,8 +47,6 @@ function buildSessionPartsText_(startDate){
 
   return lines.join("\\n");
 }
-
-
 /**
  * Escapes text so it is safe for ICS calendar format.
  */
@@ -134,6 +132,7 @@ ${CONFIG.ORGANIZER.name}
 `;
 
 
+
   // ---------------------------------------------
   // Unique calendar event ID
   // ---------------------------------------------
@@ -184,90 +183,43 @@ const confirmed = records.filter(r =>
 normalizeConfirmationStatus_(r.confirmationStatus) === "Confirmed"
 );
 
-/* prevent duplicates */
-const seen = new Set();
-
 let events = "";
-
-confirmed.sort((a,b)=>{
-  const d1 = parseDateTime_(a.DateTalk,a.TimeStartTalk);
-  const d2 = parseDateTime_(b.DateTalk,b.TimeStartTalk);
-  return d1 - d2;
-});
 
 confirmed.forEach(r=>{
 
 const start = parseDateTime_(r.DateTalk,r.TimeStartTalk);
+
 if(!start) return;
 
 const duration = parseDurationMinutes_(r.LastingTalk);
+
 const end = new Date(start.getTime() + duration*60000);
 
-/* unique key to avoid duplicates */
-const key =
-r.DateTalk + "_" +
-r.TimeStartTalk + "_" +
-r.speakerName + "_" +
-r.TopicGral;
-
-if(seen.has(key)) return;
-seen.add(key);
-
-/* STABLE UID (important) */
-const uid =
-Utilities.base64Encode(
-key
-).replace(/[^a-zA-Z0-9]/g,"") + "@asms";
-
-/* fields */
 const title = formatValue_(r.TopicGral);
 
 const speaker =
-formatValue_(r.speakerName) + " " +
-formatValue_(r.speakerLastName);
+formatValue_(r.speakerName) + " " + formatValue_(r.speakerLastName);
 
-const zoom = formatValue_(r.zoomLink);
+const zoom = r.zoomLink || "";
 
-/* OPTIONAL SESSION STRUCTURE */
-const sessionParts =
-buildSessionPartsText_(start);
-
-/* description */
-let description =
-`Speaker: ${speaker}\\n\\n`;
-
-if(sessionParts){
-description += `Session Structure:\\n${sessionParts}\\n\\n`;
-}
-
-if(zoom){
-description += `Join link:\\n${zoom}`;
-}
-
-/* event */
 events += `
 BEGIN:VEVENT
-UID:${uid}
+UID:${Utilities.getUuid()}
 DTSTAMP:${Utilities.formatDate(new Date(),"UTC","yyyyMMdd'T'HHmmss'Z'")}
 DTSTART:${Utilities.formatDate(start,"UTC","yyyyMMdd'T'HHmmss'Z'")}
 DTEND:${Utilities.formatDate(end,"UTC","yyyyMMdd'T'HHmmss'Z'")}
 SUMMARY:${escapeIcsText_(title)}
-DESCRIPTION:${escapeIcsText_(description)}
-LOCATION:Online
+DESCRIPTION:${escapeIcsText_("Speaker: " + speaker)}
 URL:${escapeIcsText_(zoom)}
 END:VEVENT
 `;
 
 });
 
-/* CALENDAR NAME (very important for UX) */
-const calendarName = escapeIcsText_(CONFIG.EVENT.name);
-
 const calendar =
 `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//ASMS//Conference//EN
-X-WR-CALNAME:${calendarName}
 ${events}
 END:VCALENDAR
 `;
