@@ -3,21 +3,7 @@
 // Conference automation platform
 // ASMS Version: 1.0
 // Author: Javier Orduz
-
-// ASMS Installer
-// Sets up a new event environment
-// ASMS Installer v1
-// Advanced System for Meetings Support
-
-// This script installs a new ASMS event environment.
-
-// Responsibilities:
-// - configure event properties
-// - create spreadsheet
-// - register templates
-// - install triggers
 // -----------------------------------------------------
-
 
 function installASMS(){
 
@@ -41,20 +27,21 @@ const letterTemplateURL = promptValue_(
 "Paste Google Doc template URL:"
 );
 
+const applicationFormURL = promptValue_(
+"Application Form",
+"Paste the application form URL (optional):"
+);
 
 /* ---------------------------------
 GET TARGET FOLDER
 --------------------------------- */
 
 const folderId = extractGoogleId_(folderURL);
-
 const folder = DriveApp.getFolderById(folderId);
 
-const subfolders = createASMSSubfolders_(folder);
-/* ---------------------------------
-const subfolders = createASMSSubfolders_(folder);
---------------------------------- */
+/* CREATE SUBFOLDERS */
 
+const subfolders = createASMSSubfolders_(folder);
 
 /* ---------------------------------
 CREATE SPREADSHEET
@@ -62,14 +49,9 @@ CREATE SPREADSHEET
 
 const spreadsheet = createASMSSpreadsheet_(eventName);
 
-/* Move spreadsheet into event folder */
-
 const spreadsheetFile = DriveApp.getFileById(spreadsheet.getId());
-
 folder.addFile(spreadsheetFile);
-
 DriveApp.getRootFolder().removeFile(spreadsheetFile);
-
 
 /* ---------------------------------
 CREATE CONFIRMATION FORM
@@ -77,35 +59,24 @@ CREATE CONFIRMATION FORM
 
 const form = createConfirmationForm_(eventName, language);
 
-
-/* MOVE FORM TO EVENT FOLDER */
-
-const formFile = DriveApp.getFileById(form.getId()).setName(eventName + " — Speaker Confirmation Form");
+const formFile = DriveApp.getFileById(form.getId())
+.setName(eventName + " — Speaker Confirmation Form");
 
 folder.addFile(formFile);
-
 DriveApp.getRootFolder().removeFile(formFile);
 
-
-/* LINK FORM TO SPREADSHEET */
+/* LINK FORM */
 
 form.setDestination(
 FormApp.DestinationType.SPREADSHEET,
 spreadsheet.getId()
 );
 
-/* ---------------------------------
-GET FORM URL
---------------------------------- */
-
 const formURL = form.getPublishedUrl();
 
-
-/* SAVE CONFIGURATION */
-const applicationFormURL = promptValue_(
-"Application Form",
-"Paste the application form URL (optional):"
-);
+/* ---------------------------------
+SAVE CONFIGURATION
+--------------------------------- */
 
 const config = {
 eventName,
@@ -121,9 +92,9 @@ sponsorLogosFolderId: subfolders["SponsorLogos"]
 
 saveASMSProperties_(config);
 
-/* ========================*/
-registerEvent_(config);
+/* REGISTER EVENT */
 
+registerEvent_(config);
 
 /* ---------------------------------
 INSTALL TRIGGERS
@@ -131,17 +102,9 @@ INSTALL TRIGGERS
 
 installASMSTriggers_(spreadsheet.getId());
 
-
-/* ---------------------------------
-SUCCESS MESSAGE
---------------------------------- */
-
 SpreadsheetApp.getUi().alert(
 "ASMS installed successfully.\n\nSpreadsheet created in selected folder."
 );
-
-
-
 
 }
 catch(err){
@@ -154,7 +117,6 @@ SpreadsheetApp.getUi().alert(
 
 }
 
-
 /* ======================== */
 
 function createASMSSpreadsheet_(eventName){
@@ -164,7 +126,6 @@ eventName + " — ASMS"
 );
 
 const sheet = spreadsheet.getActiveSheet();
-
 sheet.setName("production");
 
 const columns = [
@@ -206,124 +167,94 @@ const columns = [
 ];
 
 sheet.getRange(1,1,1,columns.length).setValues([columns]);
-
 sheet.setFrozenRows(1);
 
-sheet.getRange("A2")
-.setValue("ASMS system installed.");
+sheet.getRange("A2").setValue("ASMS system installed.");
 
 return spreadsheet;
 
 }
 
+/* ======================== */
 
-
-/** ==============*/
 function createASMSSubfolders_(eventFolder){
 
-  const names = [
-    "badges",
-    "certificates",
-    "program",
-    "website",
-    "SponsorLogos"
-  ];
+const names = [
+"badges",
+"certificates",
+"program",
+"website",
+"SponsorLogos"
+];
 
-  const ids = {};
+const ids = {};
 
-  names.forEach(name => {
-    const existing = eventFolder.getFoldersByName(name);
-    let folder;
+names.forEach(name => {
 
-    if(existing.hasNext()){
-      folder = existing.next();
-    }else{
-      folder = eventFolder.createFolder(name);
-    }
+const existing = eventFolder.getFoldersByName(name);
+let folder;
 
-    ids[name] = folder.getId();
-  });
-
-  return ids;
+if(existing.hasNext()){
+folder = existing.next();
+}else{
+folder = eventFolder.createFolder(name);
 }
 
-/** ==============*/
+ids[name] = folder.getId();
 
+});
 
-/* ============== */
+return ids;
+
+}
+
+/* ======================== */
 
 function saveASMSProperties_(config){
 
 const props = PropertiesService.getScriptProperties();
 
 props.setProperty("ASMS_EVENT_NAME", config.eventName);
-
 props.setProperty("ASMS_LANGUAGE", config.language);
-
 props.setProperty("ASMS_FORM_URL", config.formURL);
 
-props.setProperty(
-"ASMS_EVENT_SPREADSHEET_ID",
-config.spreadsheetId
-);
-
-props.setProperty(
-"ASMS_EVENT_FORM_ID",
-config.formId
-);
-
-props.setProperty(
-"ASMS_EVENT_FOLDER_ID",
-config.folderId
-);
+props.setProperty("ASMS_EVENT_SPREADSHEET_ID", config.spreadsheetId);
+props.setProperty("ASMS_EVENT_FORM_ID", config.formId);
+props.setProperty("ASMS_EVENT_FOLDER_ID", config.folderId);
 
 props.setProperty(
 "ASMS_EVENT_LETTER_TEMPLATE_ID",
 extractGoogleId_(config.letterTemplateURL)
 );
 
-
 props.setProperty(
 "ASMS_EVENT_SPONSOR_LOGOS_FOLDER_ID",
 config.sponsorLogosFolderId || ""
 );
 
-props.setProperty(
-"ASMS_EVENT_APPLICATION_FORM_URL",
-config.applicationFormUrl || ""
-);
-
 }
 
-
-
-/*================== */
+/* ======================== */
 
 function extractGoogleId_(url){
 
 const match = url.match(/[-\w]{25,}/);
-
 return match ? match[0] : null;
 
 }
 
-/*================= */
+/* ======================== */
+
 function installASMSTriggers_(spreadsheetId){
 
 const triggers = ScriptApp.getProjectTriggers();
 
-/* remove existing triggers */
-
 triggers.forEach(t => ScriptApp.deleteTrigger(t));
-
-/* form confirmation trigger */
 
 ScriptApp.newTrigger("processConfirmation")
 .forSpreadsheet(spreadsheetId)
 .onFormSubmit()
 .create();
-
-/* reminder triggers */
 
 ScriptApp.newTrigger("sendReminders")
 .timeBased()
@@ -338,7 +269,8 @@ ScriptApp.newTrigger("sendTalkReminders7Days")
 .create();
 
 }
-/*================= */
+
+/* ======================== */
 
 function promptValue_(title, message){
 
@@ -354,8 +286,8 @@ return response.getResponseText().trim();
 
 }
 
+/* ======================== */
 
-/*=================*/
 function registerEvent_(config){
 
 const props = PropertiesService.getScriptProperties();
@@ -379,7 +311,7 @@ registry = SpreadsheetApp.openById(registryId);
 const sheet = registry.getSheets()[0];
 
 /* ---------------------------------
-CREATE HEADER IF EMPTY
+ENSURE HEADER EXISTS
 --------------------------------- */
 
 if(sheet.getLastRow() === 0){
