@@ -214,3 +214,39 @@ return {
 };
 
 }
+
+/*===================*/
+
+function setupApplicationFormForActiveEvent_(){
+
+  const eventFolder = getEventFolder_();
+
+  const eventName = PropertiesService
+    .getScriptProperties()
+    .getProperty("ASMS_EVENT_NAME") || CONFIG.EVENT.name;
+
+  const language = PropertiesService
+    .getScriptProperties()
+    .getProperty("ASMS_LANGUAGE") || "EN";
+
+  const applicationData = createApplicationForm_(eventName, language, eventFolder);
+
+  const applicationForm = applicationData.form;
+  const uploadsFolder = applicationData.uploadsFolder;
+
+  const formFile = DriveApp.getFileById(applicationForm.getId())
+    .setName(eventName + " — Application Form");
+
+  eventFolder.addFile(formFile);
+  DriveApp.getRootFolder().removeFile(formFile);
+
+  const props = PropertiesService.getScriptProperties();
+
+  props.setProperty("ASMS_EVENT_APPLICATION_FORM_ID", applicationForm.getId());
+  props.setProperty("ASMS_EVENT_APPLICATION_FORM_URL", applicationForm.getPublishedUrl());
+  props.setProperty("ASMS_EVENT_APPLICATION_UPLOAD_FOLDER_ID", uploadsFolder.getId());
+
+  SpreadsheetApp.getUi().alert(
+    "Application form created and linked for the active event."
+  );
+}

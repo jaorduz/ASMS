@@ -22,6 +22,10 @@ SpreadsheetApp.getUi()
 .addItem("Clone Event","cloneASMSEvent")
 
 .addSeparator()
+.addItem("Setup Application Form","setupApplicationFormForActiveEvent_")
+
+
+.addSeparator()
 .addItem("Check Missing Columns","showMissingColumnsReport")
 .addItem("Add Missing Columns","addMissingColumns_")
 
@@ -51,6 +55,8 @@ SpreadsheetApp.getUi()
 .addSeparator()
 .addItem("System Diagnostics","runSystemDiagnostics")
 .addItem("System Summary","showSystemSummary")
+
+
 
 .addToUi();
 
