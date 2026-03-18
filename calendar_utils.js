@@ -17,36 +17,6 @@
 
 
 
-function buildSessionPartsText_(startDate){
-
-  if(!CONFIG.SESSION_STRUCTURE || !CONFIG.SESSION_STRUCTURE.enabled){
-    return "";
-  }
-
-  const parts = CONFIG.SESSION_STRUCTURE.parts;
-
-  let current = new Date(startDate.getTime());
-
-  let lines = [];
-
-  parts.forEach(p=>{
-
-    const start = new Date(current.getTime());
-    const end = new Date(current.getTime() + p.duration*60000);
-
-    const timeStr =
-      Utilities.formatDate(start, Session.getScriptTimeZone(), "HH:mm") +
-      "-" +
-      Utilities.formatDate(end, Session.getScriptTimeZone(), "HH:mm");
-
-    lines.push(`${timeStr} ${p.label}`);
-
-    current = end;
-
-  });
-
-  return lines.join("\\n");
-}
 /**
  * Escapes text so it is safe for ICS calendar format.
  */
@@ -113,16 +83,11 @@ function buildIcsBlob_(record) {
   // ---------------------------------------------
   // Event description
   // ---------------------------------------------
-const sessionParts =
-buildSessionPartsText_(startDate);
-
-const description =
-`Speaker: ${record.speakerName} ${record.speakerLastName}
+  const description =
+`Speaker: ${formatValue_(record.speakerName)} ${formatValue_(record.speakerLastName)}
 
 Topic:
-${record.TopicGral}
-
-${sessionParts ? "Session Structure:\\n" + sessionParts + "\\n\\n" : ""}
+${formatValue_(record.TopicGral)}
 
 Join link:
 ${meetingLink}
