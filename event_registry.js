@@ -1,65 +1,110 @@
 function registerEvent_(config){
 
-const props = PropertiesService.getScriptProperties();
+  const props = PropertiesService.getScriptProperties();
 
-let registryId = props.getProperty("ASMS_REGISTRY_ID");
+  let registryId = props.getProperty("ASMS_REGISTRY_ID");
 
-let registry;
+  let registry;
 
-if(!registryId){
+  /* -------------------------------------------------
+  CREATE OR OPEN REGISTRY
+  ------------------------------------------------- */
 
-registry = SpreadsheetApp.create("ASMS Events Registry");
+  if(!registryId){
 
-props.setProperty("ASMS_REGISTRY_ID", registry.getId());
+    registry = SpreadsheetApp.create("ASMS Events Registry");
 
-}else{
+    props.setProperty("ASMS_REGISTRY_ID", registry.getId());
 
-registry = SpreadsheetApp.openById(registryId);
+  }else{
 
-}
+    registry = SpreadsheetApp.openById(registryId);
 
-const sheet = registry.getSheets()[0];
+  }
 
+  const sheet = registry.getSheets()[0];
 
-/* ---------------------------------
-ENSURE applicationFormUrl COLUMN EXISTS
---------------------------------- */
+  /* -------------------------------------------------
+  DEFINE SCHEMA (UPDATED)
+  ------------------------------------------------- */
 
-const headers = sheet.getRange(1,1,1,sheet.getLastColumn())
-.getValues()[0]
-.map(h => String(h).trim());
+  const requiredHeaders = [
+    "eventName",
+    "spreadsheetId",
+    "formId",
+    "folderId",
+    "language",
+    "applicationFormUrl", // ✅ NEW COLUMN
+    "created"
+  ];
 
-if(!headers.includes("applicationFormUrl")){
+  /* -------------------------------------------------
+  INITIALIZE OR UPGRADE HEADER
+  ------------------------------------------------- */
 
-sheet.getRange(1, sheet.getLastColumn()+1)
-.setValue("applicationFormUrl");
+  if(sheet.getLastRow() === 0){
 
-}
+    sheet.appendRow(requiredHeaders);
 
+  }else{
 
+    const currentHeaders = sheet
+      .getRange(1,1,1,sheet.getLastColumn())
+      .getValues()[0];
 
-if(sheet.getLastRow() === 0){
+    const missing = requiredHeaders.filter(h => !currentHeaders.includes(h));
 
-sheet.appendRow([
-"eventName",
-"spreadsheetId",
-"formId",
-"folderId",
-"language",
-"applicationFormUrl",
-"created"
-]);
+    if(missing.length){
 
-}
+      sheet.getRange(1, currentHeaders.length + 1, 1, missing.length)
+        .setValues([missing]);
+    }
 
-sheet.appendRow([
-config.eventName,
-config.spreadsheetId,
-config.formId,
-config.folderId,
-config.language,
-config.applicationFormUrl || "",
-new Date()
-]);
+  }
+
+  /* -------------------------------------------------
+  BUILD ROW SAFELY (MATCH HEADER ORDER)
+  ------------------------------------------------- */
+
+  const headers = sheet
+    .getRange(1,1,1,sheet.getLastColumn())
+    .getValues()[0];
+
+  const row = headers.map(h => {
+
+    switch(h){
+
+      case "eventName":
+        return config.eventName;
+
+      case "spreadsheetId":
+        return config.spreadsheetId;
+
+      case "formId":
+        return config.formId;
+
+      case "folderId":
+        return config.folderId;
+
+      case "language":
+        return config.language;
+
+      case "applicationFormUrl":
+        return config.applicationFormUrl || ""; // ✅ SAFE
+
+      case "created":
+        return new Date();
+
+      default:
+        return "";
+    }
+
+  });
+
+  /* -------------------------------------------------
+  APPEND ROW
+  ------------------------------------------------- */
+
+  sheet.appendRow(row);
 
 }
