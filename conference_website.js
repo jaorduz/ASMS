@@ -275,3 +275,10 @@ return HtmlService
 .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 
 }
+
+/******/
+function debugApplicationFormUrl_(){
+  const url = PropertiesService.getScriptProperties()
+    .getProperty("ASMS_EVENT_APPLICATION_FORM_URL") || "";
+  SpreadsheetApp.getUi().alert("Application URL:\n\n" + (url || "[EMPTY]"));
+}
