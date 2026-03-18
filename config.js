@@ -60,3 +60,12 @@ SPONSORS : [
 
 };
 
+/*======*/
+SESSION_STRUCTURE: {
+  enabled: true, // turn OFF for other events
+  parts: [
+    { label: "Introductory Phase", duration: 30 },
+    { label: "International Speaker Session", duration: 60 },
+    { label: "Guided Discussion and Product Development", duration: 30 }
+  ]
+}
