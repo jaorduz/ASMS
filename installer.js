@@ -102,18 +102,21 @@ const formURL = form.getPublishedUrl();
 
 
 /* SAVE CONFIGURATION */
+const applicationFormURL = promptValue_(
+"Application Form",
+"Paste the application form URL (optional):"
+);
 
 const config = {
-
 eventName,
 language,
 formURL,
 letterTemplateURL,
+applicationFormUrl: applicationFormURL,
 spreadsheetId: spreadsheet.getId(),
 formId: form.getId(),
 folderId: folder.getId(),
 sponsorLogosFolderId: subfolders["SponsorLogos"]
-
 };
 
 saveASMSProperties_(config);
@@ -285,6 +288,11 @@ props.setProperty(
 config.sponsorLogosFolderId || ""
 );
 
+props.setProperty(
+"ASMS_EVENT_APPLICATION_FORM_URL",
+config.applicationFormUrl || ""
+);
+
 }
 
 
@@ -350,9 +358,9 @@ return response.getResponseText().trim();
 /*=================*/
 function registerEvent_(config){
 
-const registryId = PropertiesService
-.getScriptProperties()
-.getProperty("ASMS_REGISTRY_ID");
+const props = PropertiesService.getScriptProperties();
+
+let registryId = props.getProperty("ASMS_REGISTRY_ID");
 
 let registry;
 
@@ -360,8 +368,7 @@ if(!registryId){
 
 registry = SpreadsheetApp.create("ASMS Events Registry");
 
-PropertiesService.getScriptProperties()
-.setProperty("ASMS_REGISTRY_ID", registry.getId());
+props.setProperty("ASMS_REGISTRY_ID", registry.getId());
 
 }else{
 
@@ -371,6 +378,10 @@ registry = SpreadsheetApp.openById(registryId);
 
 const sheet = registry.getSheets()[0];
 
+/* ---------------------------------
+CREATE HEADER IF EMPTY
+--------------------------------- */
+
 if(sheet.getLastRow() === 0){
 
 sheet.appendRow([
@@ -379,10 +390,30 @@ sheet.appendRow([
 "formId",
 "folderId",
 "language",
+"applicationFormUrl",
 "created"
 ]);
 
 }
+
+/* ---------------------------------
+ENSURE COLUMN EXISTS (for old registries)
+--------------------------------- */
+
+const headers = sheet.getRange(1,1,1,sheet.getLastColumn())
+.getValues()[0]
+.map(h => String(h).trim());
+
+if(!headers.includes("applicationFormUrl")){
+
+sheet.getRange(1, sheet.getLastColumn()+1)
+.setValue("applicationFormUrl");
+
+}
+
+/* ---------------------------------
+APPEND EVENT
+--------------------------------- */
 
 sheet.appendRow([
 config.eventName,
@@ -390,6 +421,7 @@ config.spreadsheetId,
 config.formId,
 config.folderId,
 config.language,
+config.applicationFormUrl || "",
 new Date()
 ]);
 

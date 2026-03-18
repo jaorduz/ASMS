@@ -20,6 +20,24 @@ registry = SpreadsheetApp.openById(registryId);
 
 const sheet = registry.getSheets()[0];
 
+
+/* ---------------------------------
+ENSURE applicationFormUrl COLUMN EXISTS
+--------------------------------- */
+
+const headers = sheet.getRange(1,1,1,sheet.getLastColumn())
+.getValues()[0]
+.map(h => String(h).trim());
+
+if(!headers.includes("applicationFormUrl")){
+
+sheet.getRange(1, sheet.getLastColumn()+1)
+.setValue("applicationFormUrl");
+
+}
+
+
+
 if(sheet.getLastRow() === 0){
 
 sheet.appendRow([
@@ -28,6 +46,7 @@ sheet.appendRow([
 "formId",
 "folderId",
 "language",
+"applicationFormUrl",
 "created"
 ]);
 
@@ -39,6 +58,7 @@ config.spreadsheetId,
 config.formId,
 config.folderId,
 config.language,
+config.applicationFormUrl || "",
 new Date()
 ]);
 
