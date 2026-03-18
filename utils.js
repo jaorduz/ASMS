@@ -352,3 +352,36 @@ return DriveApp.getFolderById(folderId);
 function getField_(record, fieldName){
   return record && record[fieldName] !== undefined ? record[fieldName] : "";
 }
+
+/*=================*/
+
+function getProgramFolder_(){
+
+  const eventFolder = getEventFolder_();
+
+  const folders = eventFolder.getFoldersByName("program");
+
+  if(folders.hasNext()){
+    return folders.next();
+  }
+
+  return eventFolder.createFolder("program");
+}
+
+/*================*/
+
+function saveFileToFolder_(folder, filename, blob, overwrite = true){
+
+  const files = folder.getFilesByName(filename);
+
+  if(files.hasNext()){
+    if(overwrite){
+      const oldFile = files.next();
+      oldFile.setTrashed(true); // safer than delete
+    }else{
+      return files.next(); // skip creation
+    }
+  }
+
+  return folder.createFile(blob).setName(filename);
+}

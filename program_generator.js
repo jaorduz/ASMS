@@ -10,6 +10,39 @@
 
 
 
+function getOrCreateSubfolder_(parentFolder, subfolderName){
+
+  const folders = parentFolder.getFoldersByName(subfolderName);
+
+  if(folders.hasNext()){
+    return folders.next();
+  }
+
+  return parentFolder.createFolder(subfolderName);
+}
+
+
+function saveFileToFolder_(folder, filename, blob, mode){
+
+  const existing = folder.getFilesByName(filename);
+
+  if(existing.hasNext()){
+
+    const file = existing.next();
+
+    if(mode === "skip"){
+      return file;
+    }
+
+    if(mode === "overwrite"){
+      file.setTrashed(true);
+    }
+  }
+
+  blob.setName(filename);
+  return folder.createFile(blob);
+}
+
 // -----------------------------------------------------
 // PROGRAM BOOKLET GENERATOR
 // Generates an HTML program listing all confirmed talks
@@ -19,11 +52,9 @@
 
 function generateProgramBooklet(){
 
-const schedule = buildScheduleHtml_();
+  const schedule = buildScheduleHtml_();
 
-Logger.log(schedule);
-
-const html = `
+  const html = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -98,69 +129,32 @@ ${schedule}
 </html>
 `;
 
+  const eventFolder = getEventFolder_();
+  const programFolder = getOrCreateSubfolder_(eventFolder, "program");
 
-/* -------------------------------------------------
-GET EVENT FOLDER
-------------------------------------------------- */
-Utilities.sleep(1000);
+  const baseName = sanitizeFilename_(CONFIG.EVENT.name);
+  const htmlFilename = baseName + "_program.html";
+  const pdfFilename = baseName + "_program.pdf";
+  const icsFilename = "conference_schedule.ics";
 
-const eventFolder = getEventFolder_();
+  /* TEMP HTML */
+  const htmlBlob = Utilities.newBlob(html, "text/html", htmlFilename);
+  const htmlFile = saveFileToFolder_(programFolder, htmlFilename, htmlBlob, "overwrite");
 
-/* -------------------------------------------------
-CREATE OR GET "program" SUBFOLDER
-------------------------------------------------- */
+  Utilities.sleep(1200);
 
-let programFolder;
+  /* PDF */
+  const pdfBlob = htmlFile.getBlob().getAs(MimeType.PDF);
+  saveFileToFolder_(programFolder, pdfFilename, pdfBlob, "overwrite");
 
-const folders = eventFolder.getFoldersByName("program");
+  /* ICS */
+  const calendarBlob = generateConferenceCalendar_();
+  saveFileToFolder_(programFolder, icsFilename, calendarBlob, "overwrite");
 
-if(folders.hasNext()){
-programFolder = folders.next();
-}else{
-programFolder = eventFolder.createFolder("program");
-}
+  /* remove temp html from visible folder if you do not want it */
+  htmlFile.setTrashed(true);
 
-
-/* -------------------------------------------------
-CREATE TEMP HTML FILE
-------------------------------------------------- */
-
-const htmlBlob = Utilities.newBlob(
-html,
-"text/html",
-"program.html"
-);
-
-const htmlFile = programFolder.createFile(htmlBlob);
-
-
-/* -------------------------------------------------
-CONVERT TO PDF
-------------------------------------------------- */
-
-Utilities.sleep(1500);
-
-const pdfBlob = htmlFile.getBlob().getAs(MimeType.PDF);
-
-programFolder.createFile(
-pdfBlob.setName(
-sanitizeFilename_(CONFIG.EVENT.name) + "_program.pdf"
-)
-);
-
-
-
-
-/*====== */
-
-const calendarBlob = generateConferenceCalendar_();
-
-programFolder.createFile(calendarBlob);
-
-/* -------------------------------------------------
-OPTIONAL: REMOVE HTML FILE
-------------------------------------------------- */
-
-htmlFile.setTrashed(true);
-
+  SpreadsheetApp.getUi().alert(
+    "Program booklet generated.\n\nFiles saved in the 'program' folder."
+  );
 }

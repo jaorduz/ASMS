@@ -61,6 +61,9 @@ r.speakerPhoto || "https://via.placeholder.com/300";
 const institution =
 escapeHtml_(formatValue_(getField_(r,"institution")))
 
+const time = 
+formatTimeForDisplay_(getField_(r,"TimeStartTalk"));
+
 
 return `
 
