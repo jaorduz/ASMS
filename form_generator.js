@@ -197,12 +197,18 @@ job.createChoice("Other")
 .setRequired(true);
 
 /* File Upload */
-form.addFileUploadItem()
-.setTitle("Upload Application Letter (PDF)")
-.setRequired(true)
-.setHelpText("Please upload a PDF file.")
-.setAllowOnlySpecificFileTypes(true)
-.setAllowedFileTypes([FormApp.FileType.PDF]);
+form.addTextItem()
+.setTitle(
+  language === "ES"
+    ? "Liga a tu carta de aplicación (PDF en Google Drive)"
+    : "Link to your application letter (PDF in Google Drive)"
+)
+.setHelpText(
+  language === "ES"
+    ? "Sube tu PDF a Google Drive, activa 'Cualquier persona con el enlace' y pega aquí la liga."
+    : "Upload your PDF to Google Drive, set sharing to 'Anyone with the link', and paste the link here."
+)
+.setRequired(true);
 
 /* -------------------------------------------------
 RETURN OBJECT
