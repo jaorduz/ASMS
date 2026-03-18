@@ -346,3 +346,9 @@ throw new Error("Event folder not configured in registry.");
 return DriveApp.getFolderById(folderId);
 
 }
+
+/*=========*/
+
+function getField_(record, fieldName){
+  return record && record[fieldName] !== undefined ? record[fieldName] : "";
+}

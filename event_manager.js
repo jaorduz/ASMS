@@ -57,3 +57,51 @@ SpreadsheetApp.getUi().alert(
 );
 
 }
+
+
+/*=================*/
+function showMissingColumnsReport(){
+
+  const missing = getMissingColumns_();
+
+  if(!missing.length){
+    SpreadsheetApp.getUi().alert(
+      "ASMS Column Check",
+      "No missing columns. This event already matches the ASMS schema.",
+      SpreadsheetApp.getUi().ButtonSet.OK
+    );
+    return;
+  }
+
+  SpreadsheetApp.getUi().alert(
+    "ASMS Column Check",
+    "Missing columns:\n\n" + missing.join("\n"),
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+}
+
+/*==============*/
+function addMissingColumns_(){
+
+  const sheet = getSheet_();
+  const headers = sheet.getRange(1,1,1,sheet.getLastColumn()).getValues()[0]
+    .map(h => String(h).trim());
+
+  const required = getASMSRequiredColumns_();
+  const missing = required.filter(col => !headers.includes(col));
+
+  if(!missing.length){
+    SpreadsheetApp.getUi().alert("No missing columns to add.");
+    return;
+  }
+
+  const startCol = sheet.getLastColumn() + 1;
+
+  sheet.getRange(1, startCol, 1, missing.length).setValues([missing]);
+
+  SpreadsheetApp.getUi().alert(
+    "ASMS Schema Update",
+    "Added missing columns:\n\n" + missing.join("\n"),
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+}

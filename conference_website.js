@@ -47,19 +47,20 @@ const name =
 escapeHtml_(r.speakerName + " " + r.speakerLastName);
 
 const topic =
-escapeHtml_(r.TopicGral);
+escapeHtml_(formatValue_(getField_(r,"TopicGral")));
 
 const promo =
-escapeHtml_(r.PromotionalText || "");
+escapeHtml_(formatValue_(getField_(r,"instituPromotionalTexttion")))
 
-const bio =
-escapeHtml_(r.speakerBio || "");
+const bio = 
+escapeHtml_(formatValue_(getField_(r,"speakerBio")));
 
 const photo =
 r.speakerPhoto || "https://via.placeholder.com/300";
 
 const institution =
-escapeHtml_(r.institution || "");
+escapeHtml_(formatValue_(getField_(r,"institution")))
+
 
 return `
 
