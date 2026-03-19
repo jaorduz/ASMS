@@ -104,46 +104,6 @@ ${bio}
 }
 
 
-/*
-This is a function to build a button.
-*/
-
-function getActiveEventApplicationFormUrl_(){
-
-  const registryId = PropertiesService
-    .getScriptProperties()
-    .getProperty("ASMS_REGISTRY_ID");
-
-  const activeEventId = PropertiesService
-    .getScriptProperties()
-    .getProperty("ASMS_ACTIVE_EVENT_ID");
-
-  if(!registryId || !activeEventId){
-    return "";
-  }
-
-  const registry = SpreadsheetApp.openById(registryId);
-  const sheet = registry.getSheets()[0];
-  const rows = sheet.getDataRange().getValues();
-
-  if(rows.length < 2){
-    return "";
-  }
-
-  const headers = rows[0];
-  const data = rows.slice(1);
-
-  const spreadsheetIdIndex = headers.indexOf("spreadsheetId");
-  const applicationFormUrlIndex = headers.indexOf("applicationFormUrl");
-
-  if(spreadsheetIdIndex === -1 || applicationFormUrlIndex === -1){
-    return "";
-  }
-
-  const row = data.find(r => String(r[spreadsheetIdIndex]) === String(activeEventId));
-
-  return row ? String(row[applicationFormUrlIndex] || "").trim() : "";
-}
 
 /**
  * Build conference website HTML
@@ -153,7 +113,6 @@ function buildConferenceWebsite_(){
 const schedule = buildScheduleHtml_();
 const speakers = buildSpeakerCards_();
 
-const applicationFormUrl = getActiveEventApplicationFormUrl_();
 
 /*====================*/
 const eventFolder = getEventFolder_();
@@ -292,24 +251,6 @@ font-weight:bold;
 .zoom-link:hover{
 background:#1a5ed9;
 }
-
-/* button*/
-
-.apply-button{
-display:inline-block;
-background:#2c7be5;
-color:white;
-padding:12px 20px;
-border-radius:8px;
-text-decoration:none;
-font-weight:bold;
-margin-top:18px;
-}
-
-.apply-button:hover{
-background:#1a5ed9;
-}
-
 /* Speaker grid */
 
 .grid{
@@ -374,17 +315,7 @@ line-height:1.6;
 
 <p>International Research Bootcamp</p>
 
-${applicationFormUrl ? `
-<p>
-  <a href="${applicationFormUrl}" target="_blank" class="apply-button">
-    Apply to Event
-  </a>
-</p>
-` : ""}
-
 </div>
-
-
 
 
 <!-- CONTENT -->
