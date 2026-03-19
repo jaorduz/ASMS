@@ -15,6 +15,27 @@
 // Generates an HTML program listing all confirmed talks
 // -----------------------------------------------------
 
+function saveFileToFolder_(folder, filename, blob, mode){
+
+  const existing = folder.getFilesByName(filename);
+
+  if(existing.hasNext()){
+
+    const file = existing.next();
+
+    if(mode === "skip"){
+      return file;
+    }
+
+    if(mode === "overwrite"){
+      file.setTrashed(true);
+    }
+  }
+
+  blob.setName(filename);
+  return folder.createFile(blob);
+}
+
 
 
 function generateProgramBooklet(){
@@ -131,7 +152,12 @@ html,
 "program.html"
 );
 
-const htmlFile = programFolder.createFile(htmlBlob);
+const htmlFile = saveFileToFolder_(
+  programFolder,
+  "program_temp.html",
+  htmlBlob,
+  "overwrite"
+);
 
 
 /* -------------------------------------------------
@@ -142,12 +168,18 @@ Utilities.sleep(1500);
 
 const pdfBlob = htmlFile.getBlob().getAs(MimeType.PDF);
 
-programFolder.createFile(
-pdfBlob.setName(
-sanitizeFilename_(CONFIG.EVENT.name) + "_program.pdf"
-)
-);
+// programFolder.createFile(
+// pdfBlob.setName(
+// sanitizeFilename_(CONFIG.EVENT.name) + "_program.pdf"
+// )
+// );
 
+saveFileToFolder_(
+  programFolder,
+  sanitizeFilename_(CONFIG.EVENT.name) + "_program.pdf",
+  pdfBlob,
+  "overwrite"
+);
 
 
 
@@ -155,7 +187,12 @@ sanitizeFilename_(CONFIG.EVENT.name) + "_program.pdf"
 
 const calendarBlob = generateConferenceCalendar_();
 
-programFolder.createFile(calendarBlob);
+saveFileToFolder_(
+  programFolder,
+  "conference_schedule.ics",
+  calendarBlob,
+  "overwrite"
+);
 
 /* -------------------------------------------------
 OPTIONAL: REMOVE HTML FILE
