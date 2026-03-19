@@ -103,7 +103,42 @@ ${bio}
 
 }
 
+/*===================*/
+function getActiveEventApplicationFormUrl_(){
 
+  const props = PropertiesService.getScriptProperties();
+
+  const registryId = props.getProperty("ASMS_REGISTRY_ID");
+  const activeEventId = props.getProperty("ASMS_ACTIVE_EVENT_ID");
+
+  if(!registryId || !activeEventId){
+    return "";
+  }
+
+  const registry = SpreadsheetApp.openById(registryId);
+  const sheet = registry.getSheets()[0];
+
+  const data = sheet.getDataRange().getValues();
+
+  if(data.length < 2){
+    return "";
+  }
+
+  const headers = data[0];
+  const rows = data.slice(1);
+
+  const colEvent = headers.indexOf("spreadsheetId");
+  const colApp = headers.indexOf("applicationFormUrl");
+
+  if(colEvent === -1 || colApp === -1){
+    return "";
+  }
+
+  const row = rows.find(r => String(r[colEvent]) === String(activeEventId));
+
+  return row ? String(row[colApp] || "").trim() : "";
+}
+/*==================*/
 
 /**
  * Build conference website HTML
@@ -113,6 +148,12 @@ function buildConferenceWebsite_(){
 const schedule = buildScheduleHtml_();
 const speakers = buildSpeakerCards_();
 
+
+/*To Apply*/
+const applicationFormUrl = getActiveEventApplicationFormUrl_();
+const applyButtonHtml = applicationFormUrl
+? `<a href="${applicationFormUrl}" target="_blank" class="apply-button">Apply to Event</a>`
+: "";
 
 /*====================*/
 const eventFolder = getEventFolder_();
@@ -176,6 +217,25 @@ font-size:15px;
 nav a:hover{
 text-decoration:underline;
 }
+
+
+.apply-button{
+display:inline-block;
+background:#2c7be5;
+color:white;
+padding:8px 14px;
+border-radius:6px;
+text-decoration:none;
+font-weight:bold;
+font-size:14px;
+margin-left:18px;
+}
+
+.apply-button:hover{
+background:#1a5ed9;
+text-decoration:none;
+}
+
 
 /* Hero */
 
@@ -304,6 +364,8 @@ line-height:1.6;
 <a href="#program">Program</a>
 <a href="#speakers">Speakers</a>
 
+${applyButtonHtml}
+
 </nav>
 
 
@@ -355,6 +417,17 @@ ${speakers}
 </div>
 
 </div>
+
+
+<script>
+function openExternalLink(url){
+  try{
+    window.top.location.href = url;
+  }catch(e){
+    window.open(url,'_blank');
+  }
+}
+</script>
 
 </body>
 
