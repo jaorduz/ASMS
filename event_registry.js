@@ -28,6 +28,7 @@ sheet.appendRow([
 "formId",
 "folderId",
 "language",
+"applicationFormUrl", // NEW
 "created"
 ]);
 
@@ -39,7 +40,9 @@ config.spreadsheetId,
 config.formId,
 config.folderId,
 config.language,
+config.applicationFormUrl || "", // NEW
 new Date()
 ]);
+
 
 }
