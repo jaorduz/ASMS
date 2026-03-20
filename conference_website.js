@@ -1043,85 +1043,86 @@ function openExternalLink(url){
 /**
  * Entry point for deployed website
  */
-function doGet(e){
 
-  // ---------------------------------------------
-  // 1. Read event from URL
-  // ---------------------------------------------
-  const event = e && e.parameter && e.parameter.event;
+// function doGet(e){
 
-  if(!event){
-    return HtmlService.createHtmlOutput(
-      "<h2>No event specified</h2><p>Use ?event=EVENT_NAME</p>"
-    );
-  }
+//   // ---------------------------------------------
+//   // 1. Read event from URL
+//   // ---------------------------------------------
+//   const event = e && e.parameter && e.parameter.event;
 
-  // ---------------------------------------------
-  // 2. Load registry
-  // ---------------------------------------------
-  const props = PropertiesService.getScriptProperties();
-  const registryId = props.getProperty("ASMS_REGISTRY_ID");
+//   if(!event){
+//     return HtmlService.createHtmlOutput(
+//       "<h2>No event specified</h2><p>Use ?event=EVENT_NAME</p>"
+//     );
+//   }
 
-  const registry = SpreadsheetApp.openById(registryId);
-  const sheet = registry.getSheets()[0];
+//   // ---------------------------------------------
+//   // 2. Load registry
+//   // ---------------------------------------------
+//   const props = PropertiesService.getScriptProperties();
+//   const registryId = props.getProperty("ASMS_REGISTRY_ID");
 
-  const data = sheet.getDataRange().getValues();
-  const headers = data.shift();
+//   const registry = SpreadsheetApp.openById(registryId);
+//   const sheet = registry.getSheets()[0];
 
-  const eventIndex = headers.indexOf("eventName");
-  const spreadsheetIndex = headers.indexOf("spreadsheetId");
+//   const data = sheet.getDataRange().getValues();
+//   const headers = data.shift();
 
-  const row = data.find(r => String(r[eventIndex]).trim() === event);
+//   const eventIndex = headers.indexOf("eventName");
+//   const spreadsheetIndex = headers.indexOf("spreadsheetId");
 
-  if(!row){
-    return HtmlService.createHtmlOutput(
-      "<h2>Event not found</h2>"
-    );
-  }
+//   const row = data.find(r => String(r[eventIndex]).trim() === event);
 
-  const spreadsheetId = row[spreadsheetIndex];
+//   if(!row){
+//     return HtmlService.createHtmlOutput(
+//       "<h2>Event not found</h2>"
+//     );
+//   }
 
-  // ---------------------------------------------
-  // 3. LOAD DATA DIRECTLY (no global state)
-  // ---------------------------------------------
-  const ss = SpreadsheetApp.openById(spreadsheetId);
-  const sheetEvent = ss.getSheetByName("production");
+//   const spreadsheetId = row[spreadsheetIndex];
 
-  const values = sheetEvent.getDataRange().getValues();
-  const headersEvent = values.shift();
+//   // ---------------------------------------------
+//   // 3. LOAD DATA DIRECTLY (no global state)
+//   // ---------------------------------------------
+//   const ss = SpreadsheetApp.openById(spreadsheetId);
+//   const sheetEvent = ss.getSheetByName("production");
 
-  const records = values.map((row,i)=>{
-    const obj = {};
-    headersEvent.forEach((h,j)=>obj[h]=row[j]);
-    obj.__rowNumber = i + 2;
-    return obj;
-  });
+//   const values = sheetEvent.getDataRange().getValues();
+//   const headersEvent = values.shift();
 
-  // ---------------------------------------------
-  // 4. ICS download
-  // ---------------------------------------------
-  if(e && e.parameter.calendar){
+//   const records = values.map((row,i)=>{
+//     const obj = {};
+//     headersEvent.forEach((h,j)=>obj[h]=row[j]);
+//     obj.__rowNumber = i + 2;
+//     return obj;
+//   });
 
-    const rowNumber = parseInt(e.parameter.calendar);
-    const record = records.find(r => r.__rowNumber === rowNumber);
+//   // ---------------------------------------------
+//   // 4. ICS download
+//   // ---------------------------------------------
+//   if(e && e.parameter.calendar){
 
-    const ics = buildIcsBlob_(record);
+//     const rowNumber = parseInt(e.parameter.calendar);
+//     const record = records.find(r => r.__rowNumber === rowNumber);
 
-    return ContentService
-      .createTextOutput(ics.getDataAsString())
-      .setMimeType(ContentService.MimeType.ICAL);
-  }
+//     const ics = buildIcsBlob_(record);
 
-  // ---------------------------------------------
-  // 5. Build website WITH EVENT DATA
-  // ---------------------------------------------
-  return HtmlService
-    .createHtmlOutput(
-      buildConferenceWebsiteWithData_(records, row)
-    )
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+//     return ContentService
+//       .createTextOutput(ics.getDataAsString())
+//       .setMimeType(ContentService.MimeType.ICAL);
+//   }
 
-}
+//   // ---------------------------------------------
+//   // 5. Build website WITH EVENT DATA
+//   // ---------------------------------------------
+//   return HtmlService
+//     .createHtmlOutput(
+//       buildConferenceWebsiteWithData_(records, row)
+//     )
+//     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+
+// }
 
 
 // LOGO
