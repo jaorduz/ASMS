@@ -346,3 +346,40 @@ throw new Error("Event folder not configured in registry.");
 return DriveApp.getFolderById(folderId);
 
 }
+
+// Logos
+
+function getOrCreateSponsorFolder_(){
+
+  const eventFolder = getEventFolder_();
+
+  const folders = eventFolder.getFoldersByName("SponsorLogos");
+
+  if(folders.hasNext()){
+    return folders.next();
+  }
+
+  return eventFolder.createFolder("SponsorLogos");
+}
+
+// Logos dynamically
+
+function getSponsorLogosFromDrive_(){
+
+  const folder = getOrCreateSponsorFolder_();
+
+  const files = folder.getFiles();
+
+  const logos = [];
+
+  while(files.hasNext()){
+    const file = files.next();
+
+    logos.push({
+      name: file.getName(),
+      url: file.getUrl()
+    });
+  }
+
+  return logos;
+}
