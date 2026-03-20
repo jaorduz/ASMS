@@ -36,7 +36,7 @@ const CONFIG = {
 
   FORM: {
     confirmation: "https://docs.google.com/forms/d/e/1FAIpQLSdMmuVhUy8I9kuGLKHSb9oWzrfBFqCJnMAjuu3L1faMpmla6g/viewform"
-    //"https://docs.google.com/forms/d/1xt8K6_6QFShpiUYi4CYpnyzJ971BSvUhQf05ttdEhAI/viewform"
+    //"https://docs.google.com/forms/d/1xt8K6_6QFShpiUYi4CYpnyzJ971BSvUhQf05ttdEhAI/viewform" //Bootcamp
   },
 
   TIMEZONE: "America/Mexico_City",

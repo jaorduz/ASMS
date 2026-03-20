@@ -417,6 +417,9 @@ ${speakers}
 
 </div>
 
+
+${buildSponsorsSection_()}
+
 </div>
 
 
@@ -464,5 +467,53 @@ return ContentService
 return HtmlService
 .createHtmlOutput(buildConferenceWebsite_())
 .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+
+}
+
+
+// LOGO
+function buildSponsorsSection_(){
+
+  const sponsors = CONFIG.SPONSORS || [];
+
+  if(!sponsors.length) return "";
+
+  const logos = sponsors.map(s => `
+
+<a href="${s.url}" target="_blank">
+  <img src="${s.logo}" alt="${s.name}" style="
+    height:60px;
+    margin:10px;
+    object-fit:contain;
+  ">
+</a>
+
+`).join("");
+
+  return `
+
+<div style="
+  margin-top:60px;
+  padding:30px;
+  text-align:center;
+  background:#ffffff;
+">
+
+<h3 style="color:#0f3d75;margin-bottom:20px">
+Sponsors & Partners
+</h3>
+
+<div style="
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+">
+${logos}
+</div>
+
+</div>
+
+`;
 
 }
