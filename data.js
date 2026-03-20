@@ -63,11 +63,12 @@ return sheet;
  *   records: array of objects (one per row)
  * }
  */
-function getData_(){
+function getData_(spreadsheetId){
 
   // Get the working sheet
-  const sheet = getSheet_();
-
+  // const sheet = getSheet_();
+const ss = SpreadsheetApp.openById(spreadsheetId);
+const sheet = ss.getSheetByName("production");
   // Read all spreadsheet values
   const values = sheet.getDataRange().getValues();
 

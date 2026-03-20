@@ -16,7 +16,8 @@
  */
 function previewConferenceWebsite(){
 
-const html = buildConferenceWebsite_();
+const html = buildConferenceWebsite_(spreadsheetId);
+
 
 const output = HtmlService
 .createHtmlOutput(html)
@@ -143,13 +144,16 @@ function getActiveEventApplicationFormUrl_(){
 /**
  * Build conference website HTML
  */
-function buildConferenceWebsite_(){
+function buildConferenceWebsite_(spreadsheetId){
 
+const schedule = buildScheduleHtml_(records);
+const speakers = buildSpeakerCards_(records);
 // const schedule = buildScheduleHtml_();
 // const speakers = buildSpeakerCards_();
 
 const {records} = getData_();
 
+props.setProperty
 const schedule = buildScheduleHtml_(records);
 const speakers = buildSpeakerCards_(records);
 
@@ -504,7 +508,8 @@ function doGet(e){
   // ---------------------------------------------
   // 4. Override active event (critical step)
   // ---------------------------------------------
-  props.setProperty("ASMS_ACTIVE_EVENT_ID", spreadsheetId);
+  // props.setProperty("ASMS_ACTIVE_EVENT_ID", spreadsheetId);
+  props.setProperty("1-J6kUm_IqN3Uc815BiDNe3RJ2-aGgQHfqZK9biYGhP0", spreadsheetId);
 
   // ---------------------------------------------
   // 5. ICS download (per session)
@@ -528,7 +533,7 @@ function doGet(e){
   // 6. Render website
   // ---------------------------------------------
   return HtmlService
-    .createHtmlOutput(buildConferenceWebsite_())
+    .createHtmlOutput(buildConferenceWebsite_(spreadsheetId))
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 
 }
