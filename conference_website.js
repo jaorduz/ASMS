@@ -417,9 +417,6 @@ ${speakers}
 
 </div>
 
-
-
-
 </div>
 
 
