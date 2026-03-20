@@ -142,88 +142,57 @@ END:VCALENDAR`;
 
 function generateConferenceCalendar_(){
 
-  const {records} = getData_();
+const {records} = getData_();
 
-  const confirmed = records.filter(r =>
-    normalizeConfirmationStatus_(r.confirmationStatus) === "Confirmed"
-  );
+const confirmed = records.filter(r =>
+normalizeConfirmationStatus_(r.confirmationStatus) === "Confirmed"
+);
 
-  // ---------------------------------------------
-  // GROUP BY DATE
-  // ---------------------------------------------
-  const grouped = {};
+let events = "";
 
-  confirmed.forEach(r=>{
+confirmed.forEach(r=>{
 
-    const start = parseDateTime_(r.DateTalk,r.TimeStartTalk);
-    if(!start) return;
+const start = parseDateTime_(r.DateTalk,r.TimeStartTalk);
 
-    const dateKey = Utilities.formatDate(start, Session.getScriptTimeZone(), "yyyy-MM-dd");
+if(!start) return;
 
-    if(!grouped[dateKey]) grouped[dateKey] = [];
+const duration = parseDurationMinutes_(r.LastingTalk);
 
-    grouped[dateKey].push(r);
+const end = new Date(start.getTime() + duration*60000);
 
-  });
+const title = formatValue_(r.TopicGral);
 
+const speaker =
+formatValue_(r.speakerName) + " " + formatValue_(r.speakerLastName);
 
-  let events = "";
+const zoom = r.zoomLink || "";
 
-  // ---------------------------------------------
-  // CREATE ONE EVENT PER DAY
-  // ---------------------------------------------
-  Object.keys(grouped).forEach(dateKey=>{
-
-    const sessions = grouped[dateKey];
-
-    let earliest = null;
-    let latest = null;
-
-    sessions.forEach(r=>{
-
-      const start = parseDateTime_(r.DateTalk,r.TimeStartTalk);
-      const duration = parseDurationMinutes_(r.LastingTalk);
-      const end = new Date(start.getTime() + duration*60000);
-
-      if(!earliest || start < earliest) earliest = start;
-      if(!latest || end > latest) latest = end;
-
-    });
-
-    const title = CONFIG.EVENT.name + " — Full Day Session";
-
-    const description =
-      "Conference sessions for this day.\n\n" +
-      sessions.map(r =>
-        formatValue_(r.TimeStartTalk) + " - " +
-        formatValue_(r.TopicGral)
-      ).join("\n");
-
-    events += `
+events += `
 BEGIN:VEVENT
 UID:${Utilities.getUuid()}
 DTSTAMP:${Utilities.formatDate(new Date(),"UTC","yyyyMMdd'T'HHmmss'Z'")}
-DTSTART:${Utilities.formatDate(earliest,"UTC","yyyyMMdd'T'HHmmss'Z'")}
-DTEND:${Utilities.formatDate(latest,"UTC","yyyyMMdd'T'HHmmss'Z'")}
+DTSTART:${Utilities.formatDate(start,"UTC","yyyyMMdd'T'HHmmss'Z'")}
+DTEND:${Utilities.formatDate(end,"UTC","yyyyMMdd'T'HHmmss'Z'")}
 SUMMARY:${escapeIcsText_(title)}
-DESCRIPTION:${escapeIcsText_(description)}
-LOCATION:Online
+DESCRIPTION:${escapeIcsText_("Speaker: " + speaker)}
+URL:${escapeIcsText_(zoom)}
 END:VEVENT
 `;
 
-  });
+});
 
-  const calendar =
+const calendar =
 `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//ASMS//Conference//EN
 ${events}
-END:VCALENDAR`;
+END:VCALENDAR
+`;
 
-  return Utilities.newBlob(
-    calendar,
-    "text/calendar",
-    "conference_schedule.ics"
-  );
+return Utilities.newBlob(
+calendar,
+"text/calendar",
+"conference_schedule.ics"
+);
 
 }

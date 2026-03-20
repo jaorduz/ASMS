@@ -201,12 +201,15 @@ ${cards}
  * Web App entry point
  * Allows this script to be deployed as a public webpage.
  */
-function renderSpeakerWebpage_() {
-  return HtmlService
-    .createHtmlOutput(buildSpeakerWebpageHtml_())
-    .setTitle(CONFIG.EVENT.webpageTitle)
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+function doGet() {
+
+return HtmlService
+.createHtmlOutput(buildSpeakerWebpageHtml_())
+.setTitle(CONFIG.EVENT.webpageTitle)
+.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+
 }
+
 
 
 /**
@@ -232,10 +235,12 @@ SpreadsheetApp
  * Publish website automatically
  */
 
-function renderConferenceWebsite_(){
-  return HtmlService
-    .createHtmlOutput(buildConferenceWebsite_())
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+function doGet(){
+
+return HtmlService
+.createHtmlOutput(buildConferenceWebsite_())
+.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+
 }
 
 /*======== */

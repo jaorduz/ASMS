@@ -14,22 +14,17 @@
 const ASMS_VERSION = "1.0.0";
 
 const CONFIG = {
-  SPREADSHEET_ID: 
-  // "1jnctNn12vFfgRjlpRe-r0xh_CbzW33s4TJgIibBMuso",
-  "1-J6kUm_IqN3Uc815BiDNe3RJ2-aGgQHfqZK9biYGhP0",
+  SPREADSHEET_ID: "1jnctNn12vFfgRjlpRe-r0xh_CbzW33s4TJgIibBMuso",
+
   // Use "test" while checking the workflow.
   // Change to "production" when ready to send real emails.
   SHEET_NAME: "production",
 
   EVENT: {
     code: "RAB2026",
-    name: 
-    // "International Quantum Discovery Day",
-    "Research Accelerator Bootcamp",
-    webpageTitle: 
-    // "International Quantum Discovery Day",
-    "Research Accelerator Bootcamp Speakers",
-    confirmDeadline: "March 21, 2026"
+    name: "Research Accelerator Bootcamp",
+    webpageTitle: "Research Accelerator Bootcamp Speakers",
+    confirmDeadline: "March 18, 2026"
   },
 
   ORGANIZER: {
@@ -40,9 +35,7 @@ const CONFIG = {
   },
 
   FORM: {
-    confirmation: 
-    // "https://docs.google.com/forms/d/e/1FAIpQLSdMmuVhUy8I9kuGLKHSb9oWzrfBFqCJnMAjuu3L1faMpmla6g/viewform"
-    "https://docs.google.com/forms/d/1xt8K6_6QFShpiUYi4CYpnyzJ971BSvUhQf05ttdEhAI/viewform" //Bootcamp
+    confirmation: "https://docs.google.com/forms/d/1xt8K6_6QFShpiUYi4CYpnyzJ971BSvUhQf05ttdEhAI/viewform"
   },
 
   TIMEZONE: "America/Mexico_City",
