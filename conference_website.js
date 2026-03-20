@@ -381,6 +381,8 @@ ${applyButtonHtml}
 </div>
 
 
+
+
 <!-- CONTENT -->
 
 <div class="container">
@@ -418,7 +420,7 @@ ${speakers}
 </div>
 
 </div>
-
+${buildSponsorsSection_()}
 
 <script>
 function openExternalLink(url){
@@ -429,6 +431,9 @@ function openExternalLink(url){
   }
 }
 </script>
+
+
+
 
 </body>
 
