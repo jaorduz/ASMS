@@ -15,15 +15,68 @@
 // Generates an HTML program listing all confirmed talks
 // -----------------------------------------------------
 
+function saveFileToFolder_(folder, filename, blob, mode){
+
+  const existing = folder.getFilesByName(filename);
+
+  if(existing.hasNext()){
+
+    const file = existing.next();
+
+    if(mode === "skip"){
+      return file;
+    }
+
+    if(mode === "overwrite"){
+      file.setTrashed(true);
+    }
+  }
+
+  blob.setName(filename);
+  return folder.createFile(blob);
+}
+
+//Function called helper 
+
+function getOrCreateSubfolder_(parentFolder, name){
+
+  const folders = parentFolder.getFoldersByName(name);
+
+  if(folders.hasNext()){
+    return folders.next();
+  }
+
+  return parentFolder.createFolder(name);
+}
+
+// function
+
+function saveOrUpdateCalendarFile_(mode){
+
+  const eventFolder = getEventFolder_();
+  const programFolder = getOrCreateSubfolder_(eventFolder,"program");
+
+  const filename = "conference_schedule.ics";
+
+  const blob = generateConferenceCalendar_();
+
+  return saveFileToFolder_(
+    programFolder,
+    filename,
+    blob,
+    mode // "overwrite" or "skip"
+  );
+
+}
 
 
+
+// function
 function generateProgramBooklet(){
 
-const schedule = buildScheduleHtml_();
+  const schedule = buildScheduleHtml_();
 
-Logger.log(schedule);
-
-const html = `
+  const html = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,24 +119,6 @@ padding:10px;
 font-size:14px;
 }
 
-.talk-title{
-font-weight:bold;
-color:#0f3d75;
-}
-
-.zoom-link{
-color:#2c7be5;
-text-decoration:none;
-font-weight:bold;
-}
-
-.session-description{
-background:#fafafa;
-padding:14px;
-font-size:14px;
-line-height:1.6;
-}
-
 </style>
 </head>
 
@@ -98,69 +133,58 @@ ${schedule}
 </html>
 `;
 
+  /* ---------------------------------
+  GET FOLDER
+  --------------------------------- */
 
-/* -------------------------------------------------
-GET EVENT FOLDER
-------------------------------------------------- */
-Utilities.sleep(1000);
+  const eventFolder = getEventFolder_();
+  const programFolder = getOrCreateSubfolder_(eventFolder,"program");
 
-const eventFolder = getEventFolder_();
+  /* ---------------------------------
+  ENSURE CALENDAR EXISTS (NO DUPLICATION)
+  --------------------------------- */
 
-/* -------------------------------------------------
-CREATE OR GET "program" SUBFOLDER
-------------------------------------------------- */
+  saveOrUpdateCalendarFile_("overwrite"); // only ensures existence
 
-let programFolder;
+  /* ---------------------------------
+  CREATE TEMP HTML
+  --------------------------------- */
 
-const folders = eventFolder.getFoldersByName("program");
+  const htmlBlob = Utilities.newBlob(
+    html,
+    "text/html",
+    "program_temp.html"
+  );
 
-if(folders.hasNext()){
-programFolder = folders.next();
-}else{
-programFolder = eventFolder.createFolder("program");
-}
+  const htmlFile = saveFileToFolder_(
+    programFolder,
+    "program_temp.html",
+    htmlBlob,
+    "overwrite"
+  );
 
+  Utilities.sleep(1200);
 
-/* -------------------------------------------------
-CREATE TEMP HTML FILE
-------------------------------------------------- */
+  /* ---------------------------------
+  CREATE PDF
+  --------------------------------- */
 
-const htmlBlob = Utilities.newBlob(
-html,
-"text/html",
-"program.html"
-);
+  const pdfBlob = htmlFile.getBlob().getAs(MimeType.PDF);
 
-const htmlFile = programFolder.createFile(htmlBlob);
+  saveFileToFolder_(
+    programFolder,
+    sanitizeFilename_(CONFIG.EVENT.name) + "_program.pdf",
+    pdfBlob,
+    "overwrite"
+  );
 
+  /* ---------------------------------
+  CLEAN TEMP FILE
+  --------------------------------- */
 
-/* -------------------------------------------------
-CONVERT TO PDF
-------------------------------------------------- */
+  htmlFile.setTrashed(true);
 
-Utilities.sleep(1500);
-
-const pdfBlob = htmlFile.getBlob().getAs(MimeType.PDF);
-
-programFolder.createFile(
-pdfBlob.setName(
-sanitizeFilename_(CONFIG.EVENT.name) + "_program.pdf"
-)
-);
-
-
-
-
-/*====== */
-
-const calendarBlob = generateConferenceCalendar_();
-
-programFolder.createFile(calendarBlob);
-
-/* -------------------------------------------------
-OPTIONAL: REMOVE HTML FILE
-------------------------------------------------- */
-
-htmlFile.setTrashed(true);
-
+  SpreadsheetApp.getUi().alert(
+    "Program generated successfully.\n\nPDF and calendar stored in /program"
+  );
 }
