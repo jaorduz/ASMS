@@ -418,7 +418,7 @@ ${speakers}
 </div>
 
 
-${buildSponsorsSection_()}
+
 
 </div>
 
