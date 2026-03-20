@@ -1,6 +1,6 @@
-function buildScheduleData_(){
+function buildScheduleData_(records){
 
-const {records} = getData_();
+// const {records} = getData_();
 
 /* only confirmed speakers */
 
@@ -43,7 +43,7 @@ return sessions;
 
 function buildScheduleHtml_(records){
 
-const sessions = buildScheduleData_();
+const sessions = buildScheduleData_(records);
 
 if(!sessions.length){
 return "<p>No confirmed sessions yet.</p>";
