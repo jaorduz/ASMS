@@ -33,35 +33,33 @@ SpreadsheetApp.getUi()
 /**
  * Build speaker cards from spreadsheet
  */
-function buildSpeakerCards_(){
+function buildSpeakerCards_(records){
 
-const {records} = getData_();
+  const speakers = records.filter(r =>
+    normalizeConfirmationStatus_(r.confirmationStatus)=="Confirmed"
+  );
 
-const speakers = records.filter(r =>
-normalizeConfirmationStatus_(r.confirmationStatus)=="Confirmed"
-);
+  return speakers.map(r=>{
 
-return speakers.map(r=>{
+    const name =
+    escapeHtml_(r.speakerName + " " + r.speakerLastName);
 
-const name =
-escapeHtml_(r.speakerName + " " + r.speakerLastName);
+    const topic =
+    escapeHtml_(r.TopicGral);
 
-const topic =
-escapeHtml_(r.TopicGral);
+    const promo =
+    escapeHtml_(r.PromotionalText || "");
 
-const promo =
-escapeHtml_(r.PromotionalText || "");
+    const bio =
+    escapeHtml_(r.speakerBio || "");
 
-const bio =
-escapeHtml_(r.speakerBio || "");
+    const photo =
+    r.speakerPhoto || "https://via.placeholder.com/300";
 
-const photo =
-r.speakerPhoto || "https://via.placeholder.com/300";
+    const institution =
+    escapeHtml_(r.institution || "");
 
-const institution =
-escapeHtml_(r.institution || "");
-
-return `
+    return `
 
 <div class="speaker-card">
 
@@ -99,7 +97,7 @@ ${bio}
 </div>
 `;
 
-}).join("");
+  }).join("");
 
 }
 
@@ -582,43 +580,129 @@ function buildConferenceWebsiteWithData_(records, registryRow){
   const schedule = buildScheduleHtml_(records);
   const speakers = buildSpeakerCards_(records);
 
-  // Optional: get event name from registry
-  const eventName = registryRow[0]; // assuming eventName is first column
+  const eventName = registryRow[0];
 
   return `
 <!DOCTYPE html>
+
 <html>
 
 <head>
+
 <title>${eventName}</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body{font-family:Arial;margin:0;background:#f5f7fb;}
-.hero{background:#0f3d75;color:white;padding:60px;text-align:center;}
-.container{max-width:1200px;margin:auto;padding:40px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px;}
+
+html{scroll-behavior:smooth;}
+
+body{
+font-family:Arial;
+margin:0;
+background:#f5f7fb;
+}
+
+nav{
+background:#0f3d75;
+padding:14px;
+text-align:center;
+}
+
+nav a{
+color:white;
+margin:0 18px;
+text-decoration:none;
+font-weight:bold;
+font-size:15px;
+}
+
+nav a:hover{
+text-decoration:underline;
+}
+
+.hero{
+background:#0f3d75;
+color:white;
+padding:60px;
+text-align:center;
+}
+
+.hero h1{
+margin:0;
+font-size:36px;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:40px;
+}
+
+.schedule{
+width:100%;
+border-collapse:collapse;
+margin-bottom:40px;
+}
+
+.schedule th{
+background:#0f3d75;
+color:white;
+padding:10px;
+text-align:left;
+}
+
+.schedule td{
+padding:10px;
+border-bottom:1px solid #ddd;
+font-size:14px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:25px;
+}
+
+.speaker-card{
+background:white;
+border-radius:12px;
+padding:18px;
+box-shadow:0 6px 20px rgba(0,0,0,.08);
+}
+
 </style>
 
 </head>
 
 <body>
 
-<div class="hero">
+<nav>
+<a href="#home">Home</a>
+<a href="#program">Program</a>
+<a href="#speakers">Speakers</a>
+</nav>
+
+<div class="hero" id="home">
 <h1>${eventName}</h1>
+<p>International Research Bootcamp</p>
 </div>
 
 <div class="container">
 
 <h2>Program</h2>
+
 ${schedule}
 
-<h2>Speakers</h2>
+<h2 id="speakers">Speakers</h2>
+
 <div class="grid">
 ${speakers}
 </div>
 
 </div>
+
+${buildSponsorsSection_()}
 
 </body>
 
