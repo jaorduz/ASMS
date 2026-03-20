@@ -201,7 +201,7 @@ ${cards}
  * Web App entry point
  * Allows this script to be deployed as a public webpage.
  */
-function doGetSpeakerPage() {
+function doGet() {
 
 return HtmlService
 .createHtmlOutput(buildSpeakerWebpageHtml_())
@@ -209,9 +209,6 @@ return HtmlService
 .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 
 }
-
-
-
 
 
 
@@ -234,6 +231,17 @@ SpreadsheetApp
 }
 
 
+/**
+ * Publish website automatically
+ */
+
+function doGet(){
+
+return HtmlService
+.createHtmlOutput(buildConferenceWebsite_())
+.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+
+}
 
 /*======== */
 
