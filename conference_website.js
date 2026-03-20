@@ -10,60 +10,72 @@
 // Generates a full conference website from spreadsheet
 // -----------------------------------------------------
 
+// -----------------------------------------------------
+// ASMS - Conference Website (MULTI-EVENT SAFE)
+// -----------------------------------------------------
 
-/**
- * Preview website inside Google Sheets
- */
+
+// =========================
+// PREVIEW (uses active event)
+// =========================
 function previewConferenceWebsite(){
 
-const html = buildConferenceWebsite_(spreadsheetId);
+  const spreadsheetId = getActiveSpreadsheetId_();
+  const html = buildConferenceWebsite_(spreadsheetId);
 
+  const output = HtmlService
+    .createHtmlOutput(html)
+    .setWidth(1200)
+    .setHeight(800);
 
-const output = HtmlService
-.createHtmlOutput(html)
-.setWidth(1200)
-.setHeight(800);
-
-SpreadsheetApp.getUi()
-.showModalDialog(output,"Conference Website Preview");
-
+  SpreadsheetApp.getUi()
+    .showModalDialog(output,"Conference Website Preview");
 }
 
 
+// =========================
+// DATA ACCESS (LOCAL, NOT GLOBAL)
+// =========================
+function getDataFromSpreadsheet_(spreadsheetId){
 
-/**
- * Build speaker cards from spreadsheet
- */
+  const ss = SpreadsheetApp.openById(spreadsheetId);
+  const sheet = ss.getSheetByName("production");
+
+  if(!sheet) throw new Error("Sheet not found");
+
+  const values = sheet.getDataRange().getValues();
+  const headers = values.shift();
+
+  const records = values.map((row,i)=>{
+    const obj = {};
+    headers.forEach((h,j)=>obj[h]=row[j]);
+    obj.__rowNumber = i + 2;
+    return obj;
+  });
+
+  return {records};
+}
+
+
+// =========================
+// SPEAKERS
+// =========================
 function buildSpeakerCards_(records){
 
-// const {records} = getData_();
+  const speakers = records.filter(r =>
+    normalizeConfirmationStatus_(r.confirmationStatus)=="Confirmed"
+  );
 
-const speakers = records.filter(r =>
-normalizeConfirmationStatus_(r.confirmationStatus)=="Confirmed"
-);
+  return speakers.map(r=>{
 
-return speakers.map(r=>{
+    const name = escapeHtml_(r.speakerName + " " + r.speakerLastName);
+    const topic = escapeHtml_(r.TopicGral);
+    const promo = escapeHtml_(r.PromotionalText || "");
+    const bio = escapeHtml_(r.speakerBio || "");
+    const photo = r.speakerPhoto || "https://via.placeholder.com/300";
+    const institution = escapeHtml_(r.institution || "");
 
-const name =
-escapeHtml_(r.speakerName + " " + r.speakerLastName);
-
-const topic =
-escapeHtml_(r.TopicGral);
-
-const promo =
-escapeHtml_(r.PromotionalText || "");
-
-const bio =
-escapeHtml_(r.speakerBio || "");
-
-const photo =
-r.speakerPhoto || "https://via.placeholder.com/300";
-
-const institution =
-escapeHtml_(r.institution || "");
-
-return `
-
+    return `
 <div class="speaker-card">
 
 <img src="${photo}" style="
@@ -100,153 +112,84 @@ ${bio}
 </div>
 `;
 
-}).join("");
-
+  }).join("");
 }
 
-/*===================*/
-function getActiveEventApplicationFormUrl_(){
 
-  const props = PropertiesService.getScriptProperties();
+// =========================
+// SCHEDULE (LOCAL)
+// =========================
+function buildScheduleHtmlLocal_(records){
 
-  const registryId = props.getProperty("ASMS_REGISTRY_ID");
-  const activeEventId = props.getProperty("ASMS_ACTIVE_EVENT_ID");
+  const confirmed = records.filter(r =>
+    normalizeConfirmationStatus_(r.confirmationStatus)=="Confirmed"
+  );
 
-  if(!registryId || !activeEventId){
-    return "";
+  if(!confirmed.length){
+    return "<p>No confirmed sessions yet.</p>";
   }
 
-  const registry = SpreadsheetApp.openById(registryId);
-  const sheet = registry.getSheets()[0];
+  confirmed.sort((a,b)=>{
+    const d1 = parseDateTime_(a.DateTalk,a.TimeStartTalk);
+    const d2 = parseDateTime_(b.DateTalk,b.TimeStartTalk);
+    return d1 - d2;
+  });
 
-  const data = sheet.getDataRange().getValues();
+  let html = `
+<table class="schedule">
+<tr>
+<th>Time</th>
+<th>Speaker</th>
+<th>Talk</th>
+</tr>
+`;
 
-  if(data.length < 2){
-    return "";
-  }
+  confirmed.forEach(r=>{
 
-  const headers = data[0];
-  const rows = data.slice(1);
+    const time = formatTimeForDisplay_(r.TimeStartTalk);
+    const name = escapeHtml_(r.speakerName+" "+r.speakerLastName);
+    const topic = escapeHtml_(r.TopicGral);
 
-  const colEvent = headers.indexOf("spreadsheetId");
-  const colApp = headers.indexOf("applicationFormUrl");
+    html += `
+<tr>
+<td>${time}</td>
+<td>${name}</td>
+<td>${topic}</td>
+</tr>
+`;
+  });
 
-  if(colEvent === -1 || colApp === -1){
-    return "";
-  }
+  html += "</table>";
 
-  const row = rows.find(r => String(r[colEvent]) === String(activeEventId));
-
-  return row ? String(row[colApp] || "").trim() : "";
+  return html;
 }
-/*==================*/
 
-/**
- * Build conference website HTML
- */
+
+// =========================
+// MAIN WEBSITE
+// =========================
 function buildConferenceWebsite_(spreadsheetId){
 
-const schedule = buildScheduleHtml_(records);
-const speakers = buildSpeakerCards_(records);
-// const schedule = buildScheduleHtml_();
-// const speakers = buildSpeakerCards_();
+  const {records} = getDataFromSpreadsheet_(spreadsheetId);
 
-const {records} = getData_();
+  const schedule = buildScheduleHtmlLocal_(records);
+  const speakers = buildSpeakerCards_(records);
 
-props.setProperty
-const schedule = buildScheduleHtml_(records);
-const speakers = buildSpeakerCards_(records);
-
-/*To Apply*/
-const applicationFormUrl = getActiveEventApplicationFormUrl_();
-const applyButtonHtml = applicationFormUrl
-? `<a href="${applicationFormUrl}" target="_blank" class="apply-button">Apply to Event</a>`
-: "";
-
-/*====================*/
-const eventFolder = getEventFolder_();
-
-let programFolder;
-
-const folders = eventFolder.getFoldersByName("program");
-
-if (folders.hasNext()){
-programFolder = folders.next();
-}else{
-programFolder = eventFolder.createFolder("program");
-}
-
-const calendarBlob = generateConferenceCalendar_();
-
-// const calendarFile = programFolder.createFile(calendarBlob);
-const calendarFile = saveOrUpdateCalendarFile_("skip");
-
-const calendarUrl = calendarFile.getUrl();
-/*====================*/
-
-return `
+  return `
 <!DOCTYPE html>
-
 <html>
 
 <head>
-
-<title>${CONFIG.EVENT.name}</title>
-
+<title>Conference</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-
-html{
-scroll-behavior:smooth;
-}
 
 body{
 font-family:Arial;
 margin:0;
 background:#f5f7fb;
 }
-
-/* Navigation */
-
-nav{
-background:#0f3d75;
-padding:14px;
-text-align:center;
-}
-
-nav a{
-color:white;
-margin:0 18px;
-text-decoration:none;
-font-weight:bold;
-font-size:15px;
-}
-
-nav a:hover{
-text-decoration:underline;
-}
-
-
-.apply-button{
-display:inline-block;
-background:#2c7be5;
-color:white;
-padding:8px 14px;
-border-radius:6px;
-text-decoration:none;
-font-weight:bold;
-font-size:14px;
-margin-left:18px;
-}
-
-.apply-button:hover{
-background:#1a5ed9;
-text-decoration:none;
-}
-
-
-/* Hero */
 
 .hero{
 background:#0f3d75;
@@ -255,32 +198,16 @@ padding:60px;
 text-align:center;
 }
 
-.hero h1{
-margin:0;
-font-size:36px;
-}
-
-/* Container */
-
 .container{
 max-width:1200px;
 margin:auto;
 padding:40px;
 }
 
-/* Schedule */
-
 .schedule{
 width:100%;
 border-collapse:collapse;
 margin-bottom:40px;
-}
-
-
-.schedule th:nth-child(4),
-.schedule td:nth-child(4){
-text-align:center;
-white-space:nowrap;
 }
 
 .schedule th{
@@ -293,34 +220,7 @@ text-align:left;
 .schedule td{
 padding:10px;
 border-bottom:1px solid #ddd;
-font-size:14px;
-vertical-align:top;
 }
-
-.schedule th:nth-child(4),
-.schedule td:nth-child(4){
-text-align:center;
-white-space:nowrap;
-width:140px;
-}
-
-/* Add here */
-
-.zoom-link{
-display:inline-block;
-background:#2c7be5;
-color:white;
-padding:6px 12px;
-border-radius:6px;
-text-decoration:none;
-font-size:13px;
-font-weight:bold;
-}
-
-.zoom-link:hover{
-background:#1a5ed9;
-}
-/* Speaker grid */
 
 .grid{
 display:grid;
@@ -335,149 +235,49 @@ padding:18px;
 box-shadow:0 6px 20px rgba(0,0,0,.08);
 }
 
-.speaker-photo{
-width:100%;
-height:220px;
-object-fit:cover;
-border-radius:8px;
-}
-
-.speaker-inst{
-color:#666;
-font-size:14px;
-margin-bottom:6px;
-}
-
-.talk-title{
-font-weight:bold;
-color:#0f3d75;
-margin-bottom:8px;
-}
-
-.speaker-bio{
-font-size:14px;
-line-height:1.6;
-}
-
 </style>
 
 </head>
 
 <body>
 
-<!-- NAVIGATION -->
-
-<nav>
-
-<a href="#home">Home</a>
-<a href="#program">Program</a>
-<a href="#speakers">Speakers</a>
-
-${applyButtonHtml}
-
-</nav>
-
-
-<!-- HERO -->
-
-<div class="hero" id="home">
-
-<h1>${CONFIG.EVENT.name}</h1>
-
-<p>International Research Bootcamp</p>
-
+<div class="hero">
+<h1>Conference Website</h1>
 </div>
-
-
-
-
-<!-- CONTENT -->
 
 <div class="container">
 
 <h2>Program</h2>
-
-<p style="
-margin-bottom:20px;
-font-size:14px;
-">
-
-<a href="${calendarUrl}" target="_blank"
-style="
-background:#0f3d75;
-color:white;
-padding:10px 16px;
-border-radius:6px;
-text-decoration:none;
-font-weight:bold;
-">
-Download Conference Calendar (.ics)
-</a>
-
-</p>
-
 ${schedule}
 
-
-<h2 id="speakers">Speakers</h2>
-
+<h2>Speakers</h2>
 <div class="grid">
-
 ${speakers}
-
 </div>
 
 </div>
-${buildSponsorsSection_()}
-
-<script>
-function openExternalLink(url){
-  try{
-    window.top.location.href = url;
-  }catch(e){
-    window.open(url,'_blank');
-  }
-}
-</script>
-
-
-
 
 </body>
-
 </html>
-
 `;
-
 }
 
 
-
-/**
- * Entry point for deployed website
- */
+// =========================
+// ENTRY POINT (FINAL FIX)
+// =========================
 function doGet(e){
 
-  // ---------------------------------------------
-  // 1. Read event from URL
-  // ---------------------------------------------
   const event = e && e.parameter && e.parameter.event;
 
   if(!event){
     return HtmlService.createHtmlOutput(
-      "<h2>No event specified</h2><p>Please use ?event=EVENT_NAME in the URL.</p>"
+      "<h2>No event specified</h2><p>Use ?event=EVENT_NAME</p>"
     );
   }
 
-  // ---------------------------------------------
-  // 2. Load ASMS Events Registry
-  // ---------------------------------------------
   const props = PropertiesService.getScriptProperties();
   const registryId = props.getProperty("ASMS_REGISTRY_ID");
-
-  if(!registryId){
-    throw new Error("ASMS registry not found.");
-  }
 
   const registry = SpreadsheetApp.openById(registryId);
   const sheet = registry.getSheets()[0];
@@ -488,100 +288,15 @@ function doGet(e){
   const eventIndex = headers.indexOf("eventName");
   const spreadsheetIndex = headers.indexOf("spreadsheetId");
 
-  if(eventIndex === -1 || spreadsheetIndex === -1){
-    throw new Error("Registry missing required columns.");
-  }
-
-  // ---------------------------------------------
-  // 3. Find event row
-  // ---------------------------------------------
   const row = data.find(r => String(r[eventIndex]).trim() === event);
 
   if(!row){
-    return HtmlService.createHtmlOutput(
-      "<h2>Event not found</h2><p>Check the event parameter.</p>"
-    );
+    return HtmlService.createHtmlOutput("<h2>Event not found</h2>");
   }
 
   const spreadsheetId = row[spreadsheetIndex];
 
-  // ---------------------------------------------
-  // 4. Override active event (critical step)
-  // ---------------------------------------------
-  // props.setProperty("ASMS_ACTIVE_EVENT_ID", spreadsheetId);
-  props.setProperty("1-J6kUm_IqN3Uc815BiDNe3RJ2-aGgQHfqZK9biYGhP0", spreadsheetId);
-
-  // ---------------------------------------------
-  // 5. ICS download (per session)
-  // ---------------------------------------------
-  if(e && e.parameter.calendar){
-
-    const rowNumber = parseInt(e.parameter.calendar);
-
-    const {records} = getData_();
-
-    const record = records.find(r => r.__rowNumber === rowNumber);
-
-    const ics = buildIcsBlob_(record);
-
-    return ContentService
-      .createTextOutput(ics.getDataAsString())
-      .setMimeType(ContentService.MimeType.ICAL);
-  }
-
-  // ---------------------------------------------
-  // 6. Render website
-  // ---------------------------------------------
   return HtmlService
     .createHtmlOutput(buildConferenceWebsite_(spreadsheetId))
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-
-}
-
-
-// LOGO
-function buildSponsorsSection_(){
-
-  const sponsors = CONFIG.SPONSORS || [];
-
-  if(!sponsors.length) return "";
-
-  const logos = sponsors.map(s => `
-
-<a href="${s.url}" target="_blank">
-  <img src="${s.logo}" alt="${s.name}" style="
-    height:60px;
-    margin:10px;
-    object-fit:contain;
-  ">
-</a>
-
-`).join("");
-
-  return `
-
-<div style="
-  margin-top:60px;
-  padding:30px;
-  text-align:center;
-  background:#ffffff;
-">
-
-<h3 style="color:#0f3d75;margin-bottom:20px">
-Sponsors & Partners
-</h3>
-
-<div style="
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-">
-${logos}
-</div>
-
-</div>
-
-`;
-
 }
