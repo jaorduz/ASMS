@@ -33,9 +33,9 @@ SpreadsheetApp.getUi()
 /**
  * Build speaker cards from spreadsheet
  */
-function buildSpeakerCards_(){
+function buildSpeakerCards_(records){
 
-const {records} = getData_();
+// const {records} = getData_();
 
 const speakers = records.filter(r =>
 normalizeConfirmationStatus_(r.confirmationStatus)=="Confirmed"
@@ -145,9 +145,13 @@ function getActiveEventApplicationFormUrl_(){
  */
 function buildConferenceWebsite_(){
 
-const schedule = buildScheduleHtml_();
-const speakers = buildSpeakerCards_();
+// const schedule = buildScheduleHtml_();
+// const speakers = buildSpeakerCards_();
 
+const {records} = getData_();
+
+const schedule = buildScheduleHtml_(records);
+const speakers = buildSpeakerCards_(records);
 
 /*To Apply*/
 const applicationFormUrl = getActiveEventApplicationFormUrl_();
