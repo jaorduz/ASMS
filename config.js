@@ -14,8 +14,9 @@
 const ASMS_VERSION = "1.0.0";
 
 const CONFIG = {
-  SPREADSHEET_ID: "1jnctNn12vFfgRjlpRe-r0xh_CbzW33s4TJgIibBMuso",
-
+  SPREADSHEET_ID: 
+  // "1jnctNn12vFfgRjlpRe-r0xh_CbzW33s4TJgIibBMuso",
+  "1-J6kUm_IqN3Uc815BiDNe3RJ2-aGgQHfqZK9biYGhP0",
   // Use "test" while checking the workflow.
   // Change to "production" when ready to send real emails.
   SHEET_NAME: "production",
