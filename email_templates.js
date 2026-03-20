@@ -120,7 +120,7 @@ competitive research proposals.
 
 <p>
 We would be delighted if you could lead a
-<strong>${duration}</strong> online session on:
+<strong>${duration}</strong>-minutes online session on:
 </p>
 
 
@@ -199,7 +199,7 @@ you may indicate this in the confirmation form.
 
 
 <p>
-Please confirm your participation before
+Please Click on the confirm participation button before
 <strong>${CONFIG.EVENT.confirmDeadline}</strong>.
 </p>
 

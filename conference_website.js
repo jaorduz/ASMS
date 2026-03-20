@@ -170,7 +170,8 @@ programFolder = eventFolder.createFolder("program");
 
 const calendarBlob = generateConferenceCalendar_();
 
-const calendarFile = programFolder.createFile(calendarBlob);
+// const calendarFile = programFolder.createFile(calendarBlob);
+const calendarFile = saveOrUpdateCalendarFile_("skip");
 
 const calendarUrl = calendarFile.getUrl();
 /*====================*/
