@@ -22,9 +22,9 @@ const CONFIG = {
 
   EVENT: {
     code: "RAB2026",
-    name: "Research Accelerator Bootcamp",
-    webpageTitle: "Research Accelerator Bootcamp Speakers",
-    confirmDeadline: "March 18, 2026"
+    name: "International Quantum Discovery Day",//"Research Accelerator Bootcamp",
+    webpageTitle: "International Quantum Discovery Day",//"Research Accelerator Bootcamp Speakers",
+    confirmDeadline: "March 21, 2026"
   },
 
   ORGANIZER: {
