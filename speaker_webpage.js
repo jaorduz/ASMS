@@ -212,6 +212,9 @@ return HtmlService
 
 
 
+
+
+
 /**
  * Opens a preview of the speaker webpage inside Google Sheets.
  */
@@ -231,17 +234,6 @@ SpreadsheetApp
 }
 
 
-/**
- * Publish website automatically
- */
-
-function doGet(){
-
-return HtmlService
-.createHtmlOutput(buildConferenceWebsite_())
-.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-
-}
 
 /*======== */
 
