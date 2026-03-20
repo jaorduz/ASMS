@@ -201,7 +201,7 @@ ${cards}
  * Web App entry point
  * Allows this script to be deployed as a public webpage.
  */
-function doGet() {
+function doGetSpeakerPage() {
 
 return HtmlService
 .createHtmlOutput(buildSpeakerWebpageHtml_())
