@@ -450,25 +450,82 @@ function openExternalLink(url){
  */
 function doGet(e){
 
-if(e && e.parameter.calendar){
+  // ---------------------------------------------
+  // 1. Read event from URL
+  // ---------------------------------------------
+  const event = e && e.parameter && e.parameter.event;
 
-const row = parseInt(e.parameter.calendar);
+  if(!event){
+    return HtmlService.createHtmlOutput(
+      "<h2>No event specified</h2><p>Please use ?event=EVENT_NAME in the URL.</p>"
+    );
+  }
 
-const {records} = getData_();
+  // ---------------------------------------------
+  // 2. Load ASMS Events Registry
+  // ---------------------------------------------
+  const props = PropertiesService.getScriptProperties();
+  const registryId = props.getProperty("ASMS_REGISTRY_ID");
 
-const record = records.find(r => r.__rowNumber === row);
+  if(!registryId){
+    throw new Error("ASMS registry not found.");
+  }
 
-const ics = buildIcsBlob_(record);
+  const registry = SpreadsheetApp.openById(registryId);
+  const sheet = registry.getSheets()[0];
 
-return ContentService
-.createTextOutput(ics.getDataAsString())
-.setMimeType(ContentService.MimeType.ICAL);
+  const data = sheet.getDataRange().getValues();
+  const headers = data.shift();
 
-}
+  const eventIndex = headers.indexOf("eventName");
+  const spreadsheetIndex = headers.indexOf("spreadsheetId");
 
-return HtmlService
-.createHtmlOutput(buildConferenceWebsite_())
-.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  if(eventIndex === -1 || spreadsheetIndex === -1){
+    throw new Error("Registry missing required columns.");
+  }
+
+  // ---------------------------------------------
+  // 3. Find event row
+  // ---------------------------------------------
+  const row = data.find(r => String(r[eventIndex]).trim() === event);
+
+  if(!row){
+    return HtmlService.createHtmlOutput(
+      "<h2>Event not found</h2><p>Check the event parameter.</p>"
+    );
+  }
+
+  const spreadsheetId = row[spreadsheetIndex];
+
+  // ---------------------------------------------
+  // 4. Override active event (critical step)
+  // ---------------------------------------------
+  props.setProperty("ASMS_ACTIVE_EVENT_ID", spreadsheetId);
+
+  // ---------------------------------------------
+  // 5. ICS download (per session)
+  // ---------------------------------------------
+  if(e && e.parameter.calendar){
+
+    const rowNumber = parseInt(e.parameter.calendar);
+
+    const {records} = getData_();
+
+    const record = records.find(r => r.__rowNumber === rowNumber);
+
+    const ics = buildIcsBlob_(record);
+
+    return ContentService
+      .createTextOutput(ics.getDataAsString())
+      .setMimeType(ContentService.MimeType.ICAL);
+  }
+
+  // ---------------------------------------------
+  // 6. Render website
+  // ---------------------------------------------
+  return HtmlService
+    .createHtmlOutput(buildConferenceWebsite_())
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 
 }
 

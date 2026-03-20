@@ -24,11 +24,11 @@ if(sheet.getLastRow() === 0){
 
 sheet.appendRow([
 "eventName",
+"eventSlug",
 "spreadsheetId",
 "formId",
 "folderId",
 "language",
-"applicationFormUrl", // NEW
 "created"
 ]);
 
