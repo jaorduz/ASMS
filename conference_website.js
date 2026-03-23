@@ -194,62 +194,88 @@ scroll-behavior:smooth;
 }
 
 body{
-font-family:Arial;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 margin:0;
-background:#f5f7fb;
+background:#f4f6f9;
+color:#1f2a37;
 }
 
 /* Navigation */
 
 nav{
-background:#0f3d75;
-padding:14px;
+background:#0b2e59;
+padding:16px;
 text-align:center;
+box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 
 nav a{
-color:white;
+color:#ffffff;
 margin:0 18px;
 text-decoration:none;
-font-weight:bold;
+font-weight:600;
 font-size:15px;
+letter-spacing:0.3px;
 }
 
 nav a:hover{
 text-decoration:underline;
 }
 
+/* Apply Button */
 
 .apply-button{
 display:inline-block;
-background:#2c7be5;
+background:#1f4e8c;
 color:white;
-padding:8px 14px;
-border-radius:6px;
+padding:8px 16px;
+border-radius:8px;
 text-decoration:none;
-font-weight:bold;
+font-weight:600;
 font-size:14px;
 margin-left:18px;
+transition:all 0.2s ease;
 }
 
 .apply-button:hover{
-background:#1a5ed9;
-text-decoration:none;
+background:#163b6d;
 }
-
 
 /* Hero */
 
 .hero{
-background:#0f3d75;
+background:linear-gradient(135deg,#0b2e59,#1f4e8c);
 color:white;
-padding:60px;
+padding:70px 20px;
 text-align:center;
 }
 
 .hero h1{
 margin:0;
-font-size:36px;
+font-size:40px;
+font-weight:700;
+letter-spacing:0.5px;
+}
+
+.hero p{
+margin-top:10px;
+font-size:16px;
+opacity:0.9;
+}
+
+/* Intro section */
+
+.intro-section{
+max-width:900px;
+margin:50px auto 30px auto;
+padding:24px;
+text-align:justify;
+font-size:16px;
+line-height:1.75;
+color:#2c3e50;
+background:#ffffff;
+border-radius:12px;
+box-shadow:0 6px 18px rgba(0,0,0,0.06);
 }
 
 /* Container */
@@ -260,33 +286,43 @@ margin:auto;
 padding:40px;
 }
 
-/* Schedule */
+/* Headings */
+
+h2{
+color:#0b2e59;
+margin-bottom:20px;
+font-weight:700;
+}
+
+/* Schedule Table */
 
 .schedule{
 width:100%;
 border-collapse:collapse;
 margin-bottom:40px;
-}
-
-
-.schedule th:nth-child(4),
-.schedule td:nth-child(4){
-text-align:center;
-white-space:nowrap;
+background:white;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 4px 12px rgba(0,0,0,0.05);
 }
 
 .schedule th{
-background:#0f3d75;
+background:#0b2e59;
 color:white;
-padding:10px;
+padding:12px;
 text-align:left;
+font-weight:600;
 }
 
 .schedule td{
-padding:10px;
-border-bottom:1px solid #ddd;
+padding:12px;
+border-bottom:1px solid #e5e7eb;
 font-size:14px;
 vertical-align:top;
+}
+
+.schedule tr:hover{
+background:#f8fafc;
 }
 
 .schedule th:nth-child(4),
@@ -296,22 +332,24 @@ white-space:nowrap;
 width:140px;
 }
 
-/* Add here */
+/* Zoom button */
 
 .zoom-link{
 display:inline-block;
-background:#2c7be5;
+background:#2563eb;
 color:white;
 padding:6px 12px;
 border-radius:6px;
 text-decoration:none;
 font-size:13px;
-font-weight:bold;
+font-weight:600;
+transition:all 0.2s ease;
 }
 
 .zoom-link:hover{
-background:#1a5ed9;
+background:#1e40af;
 }
+
 /* Speaker grid */
 
 .grid{
@@ -320,35 +358,81 @@ grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
 gap:25px;
 }
 
+/* Speaker card */
+
 .speaker-card{
 background:white;
-border-radius:12px;
+border-radius:14px;
 padding:18px;
-box-shadow:0 6px 20px rgba(0,0,0,.08);
+box-shadow:0 8px 24px rgba(0,0,0,.06);
+transition:transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.speaker-photo{
-width:100%;
-height:220px;
-object-fit:cover;
-border-radius:8px;
+.speaker-card:hover{
+transform:translateY(-4px);
+box-shadow:0 12px 30px rgba(0,0,0,.08);
 }
 
-.speaker-inst{
-color:#666;
-font-size:14px;
-margin-bottom:6px;
+.speaker-card h3{
+margin-top:12px;
+font-size:18px;
+color:#0b2e59;
 }
 
-.talk-title{
-font-weight:bold;
-color:#0f3d75;
-margin-bottom:8px;
+.speaker-card img{
+border-radius:10px;
 }
 
-.speaker-bio{
-font-size:14px;
-line-height:1.6;
+.speaker-card p{
+color:#4b5563;
+}
+
+/* Sponsors */
+
+.sponsors{
+margin-top:60px;
+padding:40px 20px;
+text-align:center;
+background:#ffffff;
+border-top:1px solid #e5e7eb;
+}
+
+.sponsors h3{
+color:#0b2e59;
+margin-bottom:20px;
+font-weight:700;
+}
+
+.sponsors img{
+height:60px;
+margin:10px;
+object-fit:contain;
+filter:grayscale(20%);
+opacity:0.9;
+transition:all 0.2s ease;
+}
+
+.sponsors img:hover{
+filter:none;
+opacity:1;
+}
+
+/* Responsive */
+
+@media (max-width: 768px){
+
+.hero h1{
+font-size:28px;
+}
+
+.container{
+padding:20px;
+}
+
+.intro-section{
+text-align:left;
+}
+
 }
 
 </style>
@@ -381,6 +465,34 @@ ${applyButtonHtml}
 </div>
 
 
+<!-- paragraph -->
+
+
+<div class="intro-section" style="
+max-width:900px;
+margin:40px auto 20px auto;
+padding:20px;
+text-align:justify;
+font-size:16px;
+line-height:1.7;
+color:#333;
+background:#ffffff;
+border-radius:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.05);
+">
+
+<p>
+The Research Accelerator Bootcamp (RAB) empowers researchers to design 
+competitive funding proposals through a practical, collaborative, and 
+bilingual (Spanish–English) program. Participants gain direct insight 
+from national and international experts on evaluation standards, proposal 
+strategies, and funding opportunities, while building interdisciplinary 
+networks. RAB is designed to strengthen research capacity, foster collaboration, 
+and support the development of high-impact scientific projects aligned with national 
+and global priorities.
+</p>
+
+</div>
 
 
 <!-- CONTENT -->
