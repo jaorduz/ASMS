@@ -155,6 +155,11 @@ const applyButtonHtml = applicationFormUrl
 ? `<a href="${applicationFormUrl}" target="_blank" class="apply-button">Apply to Event</a>`
 : "";
 
+// Floating button
+const floatingApplyButtonHtml = applicationFormUrl
+? `<a href="${applicationFormUrl}" target="_blank" class="floating-apply">Apply Now</a>`
+: "";
+
 /*====================*/
 const eventFolder = getEventFolder_();
 
@@ -435,6 +440,41 @@ text-align:left;
 
 }
 
+
+
+.floating-apply{
+position:fixed;
+right:24px;
+bottom:24px;
+z-index:9999;
+display:inline-block;
+background:#1f4e8c;
+color:#ffffff;
+padding:14px 18px;
+border-radius:999px;
+text-decoration:none;
+font-weight:700;
+font-size:14px;
+box-shadow:0 10px 24px rgba(0,0,0,0.18);
+transition:all 0.2s ease;
+}
+
+.floating-apply:hover{
+background:#163b6d;
+transform:translateY(-2px);
+}
+
+@media (max-width: 768px){
+  .floating-apply{
+    right:16px;
+    bottom:16px;
+    padding:12px 16px;
+    font-size:13px;
+  }
+}
+
+
+
 </style>
 
 </head>
@@ -532,7 +572,10 @@ ${speakers}
 </div>
 
 </div>
+
 ${buildSponsorsSection_()}
+
+${floatingApplyButtonHtml}
 
 <script>
 function openExternalLink(url){
