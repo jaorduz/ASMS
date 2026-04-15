@@ -47,6 +47,24 @@ SpreadsheetApp.getUi()
 .addItem("Generate Program Booklet","generateProgramBooklet")
 .addItem("Generate Speaker Badges","generateAllBadges")
 .addItem("Generate Badge Sheets","generateBadgeSheets")
+
+    
+.addSeparator()
+.addItem("Initialize Outreach Sheet", "initializeOutreachSheet_")
+.addItem("Check Missing Outreach Columns", "showMissingOutreachColumnsReport")
+.addItem("Add Missing Outreach Columns", "addMissingOutreachColumns_")
+    
+
+
+
+.addSeparator()
+.addItem("Preview Outreach Email", "previewOutreachEmail")
+.addItem("Send Selected Outreach Emails", "sendSelectedOutreachEmails")
+.addItem("Send Pending Outreach Emails", "sendPendingOutreachEmails")
+
+// .addItem("Check Outreach Columns","Outreach")
+
+
 .addToUi();
 
 }
