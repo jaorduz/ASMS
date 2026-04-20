@@ -60,8 +60,9 @@ function initializeLetterSheet_(){
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
   sheet.setFrozenRows(1);
 
-  SpreadsheetApp.getUi().alert(
-    "Letter Invitation System",
-    "The letters_data sheet has been created successfully."
-  );
-}
+
+SpreadsheetApp.getUi().alert(
+  "Letter Invitation System",
+  "The letters_data sheet has been created successfully.",
+  SpreadsheetApp.getUi().ButtonSet.OK
+);
