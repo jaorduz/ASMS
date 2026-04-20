@@ -27,7 +27,7 @@ SpreadsheetApp.getUi()
 
 .addSeparator()
 
-.addItem("Preview Invitation","previewInvitation")
+.addItem("Preview informal Speaker Invitation","previewInvitation")
 .addItem("Send Invitations","sendInvitations")
 
 .addSeparator()

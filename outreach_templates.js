@@ -87,7 +87,7 @@ Early-career academics, and interdisciplinary teams.
       border-radius:6px;
       text-decoration:none;
       font-weight:bold;
-    ">Streaming</a>
+    ">Registration</a>
         Unlimited spots available.
     </p>
     ` : ""}
@@ -121,7 +121,7 @@ Early-career academics, and interdisciplinary teams.
 
 
 <p style="font-size:14px; color:#444;">
-A calendar file is attached to this email — you can add the event directly to your calendar.
+We recommend adding, and attaching this email, this event directly to your calendar.
 </p>
 
 
@@ -304,7 +304,7 @@ ${registration ? `
       border-radius:6px;
       text-decoration:none;
       font-weight:bold;
-    ">Transmisión en vivo</a>
+    ">Registro</a>
         Lugares ilimitados disponibles.
     </p>
     ` : ""}

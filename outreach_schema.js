@@ -29,7 +29,7 @@ function getOutreachRequiredColumns_(){
     "notes",
     "lastEmailSent",
     "campaignTag",
-    "languageEmail"
+    "languageEmailEng",
   ];
 }
 
