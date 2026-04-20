@@ -30,6 +30,17 @@ SpreadsheetApp.getUi()
 .addItem("Preview informal Speaker Invitation","previewInvitation")
 .addItem("Send Invitations","sendInvitations")
 
+
+// -----------------------------------------------------
+// Letter Invitation System
+// Menu
+// -----------------------------------------------------
+.addSeparator()
+.createMenu("Letters")
+.addItem("Initialize Letter Sheet", "initializeLetterSheet_")
+.addItem("Generate Letter for Active Row", "generateLetterForActiveRow")
+.addItem("Generate All Pending Letters", "generateAllPendingLetters")
+  
 .addSeparator()
 
 .addItem("Send Reminders","sendReminders")
