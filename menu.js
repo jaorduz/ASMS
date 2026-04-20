@@ -36,7 +36,6 @@ SpreadsheetApp.getUi()
 // Menu
 // -----------------------------------------------------
 .addSeparator()
-.createMenu("Letters")
 .addItem("Initialize Letter Sheet", "initializeLetterSheet_")
 .addItem("Generate Letter for Active Row", "generateLetterForActiveRow")
 .addItem("Generate All Pending Letters", "generateAllPendingLetters")
