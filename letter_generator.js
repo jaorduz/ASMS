@@ -11,14 +11,22 @@ function getLetterData_(){
     return { sheet, headers: [], records: [] };
   }
 
-  const headers = values.shift().map(h => String(h).trim());
+  const headers = values[0].map(h => String(h).trim());
 
-  const records = values.map((row, i) => {
+  const records = [];
+
+  for(let i = 1; i < values.length; i++){
+    const row = values[i];
+
+    const isBlank = row.every(cell => String(cell || "").trim() === "");
+    if(isBlank) continue;
+
     const obj = {};
     headers.forEach((h, j) => obj[h] = row[j]);
-    obj.__rowNumber = i + 2;
-    return obj;
-  });
+    obj.__rowNumber = i + 1;
+
+    records.push(obj);
+  }
 
   return { sheet, headers, records };
 }
@@ -99,6 +107,16 @@ function generateLetterForActiveRow(){
 }
 
 function generateAllPendingLetters(){
+
+const fullName = getLetterField_(record, "fullName");
+const firstName = getLetterField_(record, "firstName");
+const lastName = getLetterField_(record, "lastName");
+const email = getLetterField_(record, "email");
+
+if(!fullName && !firstName && !lastName && !email){
+  return;
+}
+
   const { sheet, headers, records } = getLetterData_();
 
   const colStatus = headers.indexOf("status") + 1;

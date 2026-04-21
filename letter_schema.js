@@ -9,6 +9,8 @@ function getLetterSheetName_(){
 
 function getLetterHeaders_(){
   return [
+    "academicGrade",
+    "gender",
     "firstName",
     "lastName",
     "fullName",
@@ -16,8 +18,6 @@ function getLetterHeaders_(){
     "institution",
     "department",
     "positionTitle",
-    "academicGrade",
-    "gender",
     "language",
     "eventName",
     "eventDate",
