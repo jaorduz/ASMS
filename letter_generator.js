@@ -12,7 +12,6 @@ function getLetterData_(){
   }
 
   const headers = values[0].map(h => String(h).trim());
-
   const records = [];
 
   for(let i = 1; i < values.length; i++){
@@ -107,16 +106,6 @@ function generateLetterForActiveRow(){
 }
 
 function generateAllPendingLetters(){
-
-const fullName = getLetterField_(record, "fullName");
-const firstName = getLetterField_(record, "firstName");
-const lastName = getLetterField_(record, "lastName");
-const email = getLetterField_(record, "email");
-
-if(!fullName && !firstName && !lastName && !email){
-  return;
-}
-
   const { sheet, headers, records } = getLetterData_();
 
   const colStatus = headers.indexOf("status") + 1;
@@ -127,9 +116,19 @@ if(!fullName && !firstName && !lastName && !email){
   let errors = 0;
 
   records.forEach(record => {
+
+    const fullName = getLetterField_(record, "fullName");
+    const firstName = getLetterField_(record, "firstName");
+    const lastName = getLetterField_(record, "lastName");
+    const email = getLetterField_(record, "email");
+
+    if(!fullName && !firstName && !lastName && !email){
+      return;
+    }
+
     const status = getLetterField_(record, "status").toLowerCase();
 
-    if(status && status === "generated") return;
+    if(status === "generated") return;
 
     try{
       const result = generateLetterFromRecord_(record);
