@@ -26,7 +26,7 @@ function buildDefaultOutreachHtml_(record){
   const zoom = getOutreachField_(record,"zoomLink");
   const calendarIcsUrl = getOutreachField_(record,"calendarIcsUrl");
   const posterUrl = getOutreachField_(record,"posterUrl");
-  const posterUrl = getOutreachField_(record,"posterUrl");
+
 
   return `
   <div style="
