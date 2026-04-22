@@ -18,6 +18,7 @@ function getOutreachRequiredColumns_(){
     "emailTemplate",
     "customSubject",
     "customMessage",
+    "posterUrl",
     "calendarIcsUrl",
     "zoomLink",
     "talkTime",

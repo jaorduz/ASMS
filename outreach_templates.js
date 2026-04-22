@@ -25,7 +25,8 @@ function buildDefaultOutreachHtml_(record){
   const eventUrl2 = getOutreachField_(record,"eventUrl2");
   const zoom = getOutreachField_(record,"zoomLink");
   const calendarIcsUrl = getOutreachField_(record,"calendarIcsUrl");
-  
+  const posterUrl = getOutreachField_(record,"posterUrl");
+  const posterUrl = getOutreachField_(record,"posterUrl");
 
   return `
   <div style="
@@ -47,14 +48,18 @@ function buildDefaultOutreachHtml_(record){
     </p>
 
     <p style="font-size:15px; line-height:1.6;">
-We are pleased to invite you to <strong>${eventName}</strong>, a bilingual English-Spanish 
-outreach event designed to introduce people across the Americas to the fascinating 
-world of quantum science and technology. Through engaging talks, live demonstrations, 
-and interactive discussions, participants will explore key concepts such as qubits, 
-superposition, quantum computing, communication, and cryptography — and discover why 
-quantum science is shaping the future.
-Ideal for: high school students, first-year university students, educators, 
-Early-career academics, and interdisciplinary teams.
+    We are pleased to invite you to ${eventName}, a bilingual (English–Spanish) Research Accelerator Bootcamp 
+    designed to support participants in developing competitive, submission-ready research proposals.
+
+Through interactive sessions, expert guidance, and collaborative work, participants will strengthen key 
+components of their projects—including executive summaries, research design, intellectual merit, and 
+broader impact—while aligning their work with national and international funding priorities.
+
+This program also provides practical exposure to collaborative tools, interdisciplinary research strategies, 
+and effective proposal development practices.
+
+Ideal for: faculty members, researchers, early-career academics, postdocs, and interdisciplinary 
+teams seeking to advance their research and funding opportunities.
       </p>
 
     ${talkTitle ? `
@@ -118,6 +123,20 @@ Early-career academics, and interdisciplinary teams.
       <a href="${eventUrl2}">Additional Information</a>
     </p>
     ` : ""}
+
+${posterUrl ? `
+  <div style="text-align:center; margin:20px 0;">
+    <img src="${posterUrl}" alt="Event Poster" style="
+      width:100%;
+      max-width:560px;
+      height:auto;
+      border-radius:10px;
+      display:block;
+      margin:auto;
+      box-shadow:0 4px 12px rgba(0,0,0,0.08);
+    ">
+  </div>
+` : ""}
 
 
 <p style="font-size:14px; color:#444;">
@@ -233,7 +252,7 @@ function testOutreachTemplate_(){
 
 function buildDefaultOutreachHtml_ES_(record){
 
-  const firstName = getOutreachField_(record,"firstName");
+const firstName = getOutreachField_(record,"firstName");
 const eventName = getOutreachField_(record,"eventName");
 const talkTitle = getOutreachField_(record,"talkTitle");
 const talkTime = getOutreachField_(record,"talkTime");
@@ -242,6 +261,8 @@ const eventUrl1 = getOutreachField_(record,"eventUrl1");
 const eventUrl2 = getOutreachField_(record,"eventUrl2");
 const zoom = getOutreachField_(record,"zoomLink");
 const calendarIcsUrl = getOutreachField_(record,"calendarIcsUrl");
+const posterUrl = getOutreachField_(record,"posterUrl");
+
 return `
   <div style="
     font-family:Arial, sans-serif;
