@@ -48,6 +48,8 @@ function buildDefaultOutreachHtml_(record){
     </p>
 
     <p style="font-size:15px; line-height:1.6;">
+  ${posterUrl}
+
     We are pleased to invite you to ${eventName}, a bilingual (English–Spanish) Research Accelerator Bootcamp 
     designed to support participants in developing competitive, submission-ready research proposals.
 
@@ -280,6 +282,7 @@ ${eventName}
       Hola ${firstName || "estimado/a"},
     </p>
     <p style="font-size:15px; line-height:1.6;">
+
 
 El <strong>${eventName}</strong> es un evento bilingüe inglés-español enfocado en jóvenes, 
 diseñado para despertar la curiosidad e inspirar a la próxima generación de pensadores 
