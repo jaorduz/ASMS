@@ -33,9 +33,12 @@ SpreadsheetApp.getUi()
 /**
  * Build speaker cards from spreadsheet
  */
-function buildSpeakerCards_(){
+function buildSpeakerCards_(records){
 
-const {records} = getData_();
+if(!records){
+  const data = getData_();
+  records = data.records;
+}
 
 const speakers = records.filter(r =>
 normalizeConfirmationStatus_(r.confirmationStatus)=="Confirmed"
@@ -143,14 +146,470 @@ function getActiveEventApplicationFormUrl_(){
 /**
  * Build conference website HTML
  */
-function buildConferenceWebsite_(){
+// function buildConferenceWebsite_(){
 
-const schedule = buildScheduleHtml_();
-const speakers = buildSpeakerCards_();
+// const schedule = buildScheduleHtml_();
+// const speakers = buildSpeakerCards_();
+
+
+// /*To Apply*/
+// const applicationFormUrl = getActiveEventApplicationFormUrl_();
+// const applyButtonHtml = applicationFormUrl
+// ? `<a href="${applicationFormUrl}" target="_blank" class="apply-button">Apply to Event</a>`
+// : "";
+
+// // Floating button
+// const floatingApplyButtonHtml = applicationFormUrl
+// ? `<a href="${applicationFormUrl}" target="_blank" class="floating-apply">Apply Now</a>`
+// : "";
+
+// /*====================*/
+// const eventFolder = getEventFolder_();
+
+// let programFolder;
+
+// const folders = eventFolder.getFoldersByName("program");
+
+// if (folders.hasNext()){
+// programFolder = folders.next();
+// }else{
+// programFolder = eventFolder.createFolder("program");
+// }
+
+// const calendarBlob = generateConferenceCalendar_();
+
+// // const calendarFile = programFolder.createFile(calendarBlob);
+// const calendarFile = saveOrUpdateCalendarFile_("skip");
+
+// const calendarUrl = calendarFile.getUrl();
+// /*====================*/
+
+// return `
+// <!DOCTYPE html>
+
+// <html>
+
+// <head>
+
+// <title>${CONFIG.EVENT.name}</title>
+
+// <meta name="viewport" content="width=device-width, initial-scale=1">
+
+// <style>
+
+// html{
+// scroll-behavior:smooth;
+// }
+
+// body{
+// font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+// margin:0;
+// background:#f4f6f9;
+// color:#1f2a37;
+// }
+
+// /* Navigation */
+
+// nav{
+// background:#0b2e59;
+// padding:16px;
+// text-align:center;
+// box-shadow:0 2px 6px rgba(0,0,0,0.08);
+// }
+
+// nav a{
+// color:#ffffff;
+// margin:0 18px;
+// text-decoration:none;
+// font-weight:600;
+// font-size:15px;
+// letter-spacing:0.3px;
+// }
+
+// nav a:hover{
+// text-decoration:underline;
+// }
+
+// /* Apply Button */
+
+// .apply-button{
+// display:inline-block;
+// background:#1f4e8c;
+// color:white;
+// padding:8px 16px;
+// border-radius:8px;
+// text-decoration:none;
+// font-weight:600;
+// font-size:14px;
+// margin-left:18px;
+// transition:all 0.2s ease;
+// }
+
+// .apply-button:hover{
+// background:#163b6d;
+// }
+
+// /* Hero */
+
+// .hero{
+// background:linear-gradient(135deg,#0b2e59,#1f4e8c);
+// color:white;
+// padding:70px 20px;
+// text-align:center;
+// }
+
+// .hero h1{
+// margin:0;
+// font-size:40px;
+// font-weight:700;
+// letter-spacing:0.5px;
+// }
+
+// .hero p{
+// margin-top:10px;
+// font-size:16px;
+// opacity:0.9;
+// }
+
+// /* Intro section */
+
+// .intro-section{
+// max-width:900px;
+// margin:50px auto 30px auto;
+// padding:24px;
+// text-align:justify;
+// font-size:16px;
+// line-height:1.75;
+// color:#2c3e50;
+// background:#ffffff;
+// border-radius:12px;
+// box-shadow:0 6px 18px rgba(0,0,0,0.06);
+// }
+
+// /* Container */
+
+// .container{
+// max-width:1200px;
+// margin:auto;
+// padding:40px;
+// }
+
+// /* Headings */
+
+// h2{
+// color:#0b2e59;
+// margin-bottom:20px;
+// font-weight:700;
+// }
+
+// /* Schedule Table */
+
+// .schedule{
+// width:100%;
+// border-collapse:collapse;
+// margin-bottom:40px;
+// background:white;
+// border-radius:10px;
+// overflow:hidden;
+// box-shadow:0 4px 12px rgba(0,0,0,0.05);
+// }
+
+// .schedule th{
+// background:#0b2e59;
+// color:white;
+// padding:12px;
+// text-align:left;
+// font-weight:600;
+// }
+
+// .schedule td{
+// padding:12px;
+// border-bottom:1px solid #e5e7eb;
+// font-size:14px;
+// vertical-align:top;
+// }
+
+// .schedule tr:hover{
+// background:#f8fafc;
+// }
+
+// .schedule th:nth-child(4),
+// .schedule td:nth-child(4){
+// text-align:center;
+// white-space:nowrap;
+// width:140px;
+// }
+
+// /* Zoom button */
+
+// .zoom-link{
+// display:inline-block;
+// background:#2563eb;
+// color:white;
+// padding:6px 12px;
+// border-radius:6px;
+// text-decoration:none;
+// font-size:13px;
+// font-weight:600;
+// transition:all 0.2s ease;
+// }
+
+// .zoom-link:hover{
+// background:#1e40af;
+// }
+
+// /* Speaker grid */
+
+// .grid{
+// display:grid;
+// grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+// gap:25px;
+// }
+
+// /* Speaker card */
+
+// .speaker-card{
+// background:white;
+// border-radius:14px;
+// padding:18px;
+// box-shadow:0 8px 24px rgba(0,0,0,.06);
+// transition:transform 0.2s ease, box-shadow 0.2s ease;
+// }
+
+// .speaker-card:hover{
+// transform:translateY(-4px);
+// box-shadow:0 12px 30px rgba(0,0,0,.08);
+// }
+
+// .speaker-card h3{
+// margin-top:12px;
+// font-size:18px;
+// color:#0b2e59;
+// }
+
+// .speaker-card img{
+// border-radius:10px;
+// }
+
+// .speaker-card p{
+// color:#4b5563;
+// }
+
+// /* Sponsors */
+
+// .sponsors{
+// margin-top:60px;
+// padding:40px 20px;
+// text-align:center;
+// background:#ffffff;
+// border-top:1px solid #e5e7eb;
+// }
+
+// .sponsors h3{
+// color:#0b2e59;
+// margin-bottom:20px;
+// font-weight:700;
+// }
+
+// .sponsors img{
+// height:60px;
+// margin:10px;
+// object-fit:contain;
+// filter:grayscale(20%);
+// opacity:0.9;
+// transition:all 0.2s ease;
+// }
+
+// .sponsors img:hover{
+// filter:none;
+// opacity:1;
+// }
+
+// /* Responsive */
+
+// @media (max-width: 768px){
+
+// .hero h1{
+// font-size:28px;
+// }
+
+// .container{
+// padding:20px;
+// }
+
+// .intro-section{
+// text-align:left;
+// }
+
+// }
+
+
+
+// .floating-apply{
+// position:fixed;
+// right:24px;
+// bottom:24px;
+// z-index:9999;
+// display:inline-block;
+// background:#1f4e8c;
+// color:#ffffff;
+// padding:14px 18px;
+// border-radius:999px;
+// text-decoration:none;
+// font-weight:700;
+// font-size:14px;
+// box-shadow:0 10px 24px rgba(0,0,0,0.18);
+// transition:all 0.2s ease;
+// }
+
+// .floating-apply:hover{
+// background:#163b6d;
+// transform:translateY(-2px);
+// }
+
+// @media (max-width: 768px){
+//   .floating-apply{
+//     right:16px;
+//     bottom:16px;
+//     padding:12px 16px;
+//     font-size:13px;
+//   }
+// }
+
+
+
+// </style>
+
+// </head>
+
+// <body>
+
+// <!-- NAVIGATION -->
+
+// <nav>
+
+// <a href="#home">Home</a>
+// <a href="#program">Program</a>
+// <a href="#speakers">Speakers</a>
+
+// ${applyButtonHtml}
+
+// </nav>
+
+
+// <!-- HERO -->
+
+// <div class="hero" id="home">
+
+// <h1>${CONFIG.EVENT.name}</h1>
+
+// <p>International Research Bootcamp</p>
+
+// </div>
+
+
+// <!-- paragraph -->
+
+
+// <div class="intro-section" style="
+// max-width:900px;
+// margin:40px auto 20px auto;
+// padding:20px;
+// text-align:justify;
+// font-size:16px;
+// line-height:1.7;
+// color:#333;
+// background:#ffffff;
+// border-radius:10px;
+// box-shadow:0 4px 12px rgba(0,0,0,0.05);
+// ">
+
+// <p>
+// The Research Accelerator Bootcamp (RAB) empowers researchers to design 
+// competitive funding proposals through a practical, collaborative, and 
+// bilingual (Spanish–English) program. Participants gain direct insight 
+// from national and international experts on evaluation standards, proposal 
+// strategies, and funding opportunities, while building interdisciplinary 
+// networks. RAB is designed to strengthen research capacity, foster collaboration, 
+// and support the development of high-impact scientific projects aligned with national 
+// and global priorities.
+// </p>
+
+// </div>
+
+
+// <!-- CONTENT -->
+
+// <div class="container">
+
+// <h2>Program</h2>
+
+// <p style="
+// margin-bottom:20px;
+// font-size:14px;
+// ">
+
+// <a href="${calendarUrl}" target="_blank"
+// style="
+// background:#0f3d75;
+// color:white;
+// padding:10px 16px;
+// border-radius:6px;
+// text-decoration:none;
+// font-weight:bold;
+// ">
+// Download Conference Calendar (.ics)
+// </a>
+
+// </p>
+
+// ${schedule}
+
+
+// <h2 id="speakers">Speakers</h2>
+
+// <div class="grid">
+
+// ${speakers}
+
+// </div>
+
+// </div>
+
+// ${buildSponsorsSection_()}
+
+// ${floatingApplyButtonHtml}
+
+// <script>
+// function openExternalLink(url){
+//   try{
+//     window.top.location.href = url;
+//   }catch(e){
+//     window.open(url,'_blank');
+//   }
+// }
+// </script>
+
+
+
+
+// </body>
+
+// </html>
+
+// `;
+
+// }
+
+function buildConferenceWebsiteWithData_(records, context){
+
+const schedule = buildScheduleHtml_(records);
+const speakers = buildSpeakerCards_(records);
 
 
 /*To Apply*/
-const applicationFormUrl = getActiveEventApplicationFormUrl_();
+const applicationFormUrl = context.applicationFormUrl;
+
 const applyButtonHtml = applicationFormUrl
 ? `<a href="${applicationFormUrl}" target="_blank" class="apply-button">Apply to Event</a>`
 : "";
@@ -158,6 +617,14 @@ const applyButtonHtml = applicationFormUrl
 // Floating button
 const floatingApplyButtonHtml = applicationFormUrl
 ? `<a href="${applicationFormUrl}" target="_blank" class="floating-apply">Apply Now</a>`
+: "";
+
+const headerImageHtml = context.headerImageUrl
+? `
+<div class="header-image">
+  <img src="${context.headerImageUrl}" alt="${context.eventName}">
+</div>
+`
 : "";
 
 /*====================*/
@@ -173,12 +640,13 @@ programFolder = folders.next();
 programFolder = eventFolder.createFolder("program");
 }
 
-const calendarBlob = generateConferenceCalendar_();
+// const calendarBlob = generateConferenceCalendar_();
 
 // const calendarFile = programFolder.createFile(calendarBlob);
-const calendarFile = saveOrUpdateCalendarFile_("skip");
+// const calendarFile = saveOrUpdateCalendarFile_("skip");
 
-const calendarUrl = calendarFile.getUrl();
+// const calendarUrl = calendarFile.getUrl();
+const calendarUrl = "";
 /*====================*/
 
 return `
@@ -188,11 +656,26 @@ return `
 
 <head>
 
-<title>${CONFIG.EVENT.name}</title>
+<title>${context.eventName}</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+
+.header-image{
+width:100%;
+max-height:420px;
+overflow:hidden;
+background:#ffffff;
+}
+
+.header-image img{
+width:100%;
+height:auto;
+max-height:420px;
+object-fit:cover;
+display:block;
+}
 
 html{
 scroll-behavior:smooth;
@@ -493,12 +976,16 @@ ${applyButtonHtml}
 
 </nav>
 
+${headerImageHtml}
+
+<!-- HERO -->
+
 
 <!-- HERO -->
 
 <div class="hero" id="home">
 
-<h1>${CONFIG.EVENT.name}</h1>
+<h1>${context.eventName}</h1>
 
 <p>International Research Bootcamp</p>
 
@@ -599,32 +1086,25 @@ function openExternalLink(url){
 }
 
 
-
 /**
  * Entry point for deployed website
  */
 function doGet(e){
 
-if(e && e.parameter.calendar){
+  const eventName = e && e.parameter && e.parameter.event;
 
-const row = parseInt(e.parameter.calendar);
+  if(!eventName){
+    return HtmlService.createHtmlOutput(
+      "<h2>No event specified</h2><p>Use ?event=EVENT_NAME</p>"
+    );
+  }
 
-const {records} = getData_();
+  const context = getRegistryEventContext_(eventName);
+  const records = getWebsiteRecordsFromSpreadsheet_(context.spreadsheetId);
 
-const record = records.find(r => r.__rowNumber === row);
-
-const ics = buildIcsBlob_(record);
-
-return ContentService
-.createTextOutput(ics.getDataAsString())
-.setMimeType(ContentService.MimeType.ICAL);
-
-}
-
-return HtmlService
-.createHtmlOutput(buildConferenceWebsite_())
-.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-
+  return HtmlService
+    .createHtmlOutput(buildConferenceWebsiteWithData_(records, context))
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
 
@@ -673,4 +1153,77 @@ ${logos}
 
 `;
 
+}
+
+
+function getRegistryEventContext_(eventName){
+
+
+  
+  const props = PropertiesService.getScriptProperties();
+  const registryId = props.getProperty("ASMS_REGISTRY_ID");
+
+  if(!registryId){
+    throw new Error("ASMS registry not found.");
+  }
+
+  const registry = SpreadsheetApp.openById(registryId);
+  const sheet = registry.getSheets()[0];
+
+  const values = sheet.getDataRange().getValues();
+  const headers = values.shift().map(h => String(h).trim());
+
+  const eventIndex = headers.indexOf("eventName");
+
+  if(eventIndex === -1){
+    throw new Error("Registry missing eventName column.");
+  }
+
+  const row = values.find(r =>
+    String(r[eventIndex]).trim() === String(eventName).trim()
+  );
+
+  if(!row){
+    throw new Error("Event not found in registry: " + eventName);
+  }
+
+  function valueOf(columnName){
+    const index = headers.indexOf(columnName);
+    return index === -1 ? "" : String(row[index] || "").trim();
+  }
+
+  return {
+    eventName: valueOf("eventName"),
+    spreadsheetId: valueOf("spreadsheetId"),
+    formId: valueOf("formId"),
+    folderId: valueOf("folderId"),
+    language: valueOf("language"),
+    applicationFormUrl: valueOf("applicationFormUrl"),
+    headerImageUrl: valueOf("headerImageUrl")
+  };
+}
+
+function getWebsiteRecordsFromSpreadsheet_(spreadsheetId){
+
+  const ss = SpreadsheetApp.openById(spreadsheetId);
+  const sheet = ss.getSheetByName("production");
+
+  if(!sheet){
+    throw new Error("production sheet not found.");
+  }
+
+  const values = sheet.getDataRange().getValues();
+
+  if(values.length < 2){
+    return [];
+  }
+
+  const headers = values.shift().map(h => String(h).trim());
+
+  return values.map((row,i)=>{
+    const obj = {};
+    headers.forEach((h,j)=>obj[h]=row[j]);
+    obj.__rowNumber = i + 2;
+    return obj;
+  });
 }

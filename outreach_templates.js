@@ -283,22 +283,20 @@ ${eventName}
     </p>
     <p style="font-size:15px; line-height:1.6;">
 
+Nos complace invitarle a ${eventName}, un Bootcamp Acelerador de Investigación bilingüe 
+(inglés–español) diseñado para apoyar a los participantes en el desarrollo de propuestas 
+de investigación competitivas y listas para su envío.
 
-El <strong>${eventName}</strong> es un evento bilingüe inglés-español enfocado en jóvenes, 
-diseñado para despertar la curiosidad e inspirar a la próxima generación de pensadores 
-cuánticos. Realizado completamente en línea, el IQDD conecta a estudiantes de todo el 
-continente americano con destacados educadores, investigadores y referentes de la comunidad 
-cuántica internacional.
+A través de sesiones interactivas, acompañamiento de expertos y trabajo colaborativo, los 
+participantes fortalecerán componentes clave de sus proyectos—incluyendo resúmenes ejecutivos, 
+diseño de investigación, mérito intelectual e impacto amplio—alineando su trabajo con prioridades de 
+financiamiento nacionales e internacionales.
 
-Ya sea que estés descubriendo la ciencia cuántica por primera vez o que desees profundizar 
-tu comprensión, el IQDD ofrece una experiencia accesible y enriquecedora para todos. 
-A través de charlas inspiradoras, demostraciones educativas y discusiones interactivas, 
-los participantes explorarán conceptos fascinantes como qubits, superposición, computación 
-cuántica, comunicación cuántica y criptografía — y descubrirán por qué estos avances están 
-transformando la ciencia, la tecnología y la sociedad.
+Este programa también brinda exposición práctica a herramientas de colaboración, estrategias de 
+investigación interdisciplinaria y buenas prácticas para la formulación de propuestas.
 
-Ideal para estudiantes de preparatoria, estudiantes de primer año universitario, docentes y 
-cualquier persona curiosa sobre el mundo cuántico.   
+Dirigido a: profesores, investigadores, académicos en etapas iniciales, estudiantes de posgrado y 
+equipos interdisciplinarios que buscan fortalecer sus proyectos y oportunidades de financiamiento.
 
     </p>
 ${talkTitle ? `
