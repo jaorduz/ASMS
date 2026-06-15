@@ -1,5 +1,5 @@
 git add .
-git commit -m "Add apply to event utto to conference website"
+git commit -m "update Version Jun 15"
 git push
 
 clasp push
